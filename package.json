@@ -1,0 +1,26 @@
+{
+  "name": "kortex-template-v2",
+  "version": "0.1.0",
+  "description": "Personal Knowledge Graph framework — markdown-first, multi-AI portable",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@10.33.2",
+  "scripts": {
+    "kortex": "node scripts/cli.mjs",
+    "test": "node --test scripts/tests/",
+    "setup": "node scripts/setup.mjs",
+    "prepare": "husky || true"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "husky": "^9.1.7"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cposada23/kortex-template-v2.git"
+  }
+}
