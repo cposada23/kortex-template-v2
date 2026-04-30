@@ -10,7 +10,7 @@
   "packageManager": "pnpm@10.33.2",
   "scripts": {
     "kortex": "node scripts/cli.mjs",
-    "test": "node --test scripts/tests/",
+    "test": "node --test \"scripts/tests/**/*.test.mjs\"",
     "setup": "node scripts/setup.mjs",
     "prepare": "husky || true"
   },
