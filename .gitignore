@@ -31,3 +31,6 @@ output/sessions/*.local.md
 
 # Husky internals (auto-installed)
 .husky/_
+
+# Execution journals (operational, not content)
+output/JOURNAL.md

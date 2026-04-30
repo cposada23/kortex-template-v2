@@ -1,0 +1,211 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://kortex-template-v2/schema/frontmatter.json",
+  "title": "Kortex v2 frontmatter",
+  "description": "Canonical schema for Kortex v2 markdown file frontmatter. Consolidates v1 frontmatter.md + idea-frontmatter.md + the schema content embedded in v1 root CLAUDE.md into a single source of truth. v1 .md rules files are obsolete after v2 — this JSON Schema is the authority.",
+  "type": "object",
+  "required": ["title", "type", "layer", "language", "tags", "updated"],
+  "additionalProperties": true,
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable title. Required on every indexable .md file."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "concept",
+        "reference",
+        "playbook",
+        "area",
+        "project",
+        "tool",
+        "person",
+        "index",
+        "inbox",
+        "idea",
+        "todo",
+        "todo-index",
+        "adr",
+        "session"
+      ],
+      "description": "Type discriminator. v1 had drift with ~42 ad-hoc values across the corpus; v2 enforces 14 only. See schema/types.md for the canonical reference of each value."
+    },
+    "layer": {
+      "type": "string",
+      "enum": ["source", "synthesis", "project", "schema"],
+      "description": "Conceptual layer in the five-zone architecture. v1 mixed `capa/N-...` tags with `layer:` field — v2 keeps only `layer:` and removes the `capa/*` tag convention entirely. `source` = raw imported material, `synthesis` = wiki layer, `project` = active execution, `schema` = framework/operational."
+    },
+    "language": {
+      "type": "string",
+      "enum": ["en", "es", "en-es"],
+      "description": "Content language. `en-es` indicates intentional bilingual content."
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]*(/[a-z0-9-]+)*$"
+      },
+      "minItems": 0,
+      "description": "Lowercase kebab-case tags. Forward-slash hierarchical tags allowed (e.g. `area/finance`). The v1 `capa/*` convention is REMOVED — `layer:` field replaces it."
+    },
+    "updated": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "ISO-8601 date (YYYY-MM-DD) of last meaningful edit. Bump on substantive changes; whitespace edits do not require a bump."
+    },
+    "mirror": {
+      "type": "string",
+      "enum": ["framework", "personal", "both"],
+      "default": "personal",
+      "description": "Mirror flag — controls publication to the public template repo via `pnpm kortex sync-to-template`. `framework` = mirrored to the public template (portable, no personal data). `personal` (default) = stays in the user's repo only. `both` = mirrored AND kept locally (rare; reserved for content that has both a public canonical version and a personal customization layer). Replaces the draft `visibility:` field that briefly existed during v2 design."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "draft",
+        "archived",
+        "inbox",
+        "in-validation",
+        "in-testing",
+        "in-production",
+        "ready-to-publish",
+        "published",
+        "rejected-at-validation",
+        "reserva",
+        "regalable",
+        "archivada"
+      ],
+      "description": "Lifecycle status. The first three (`active|draft|archived`) apply to any content type. The remaining values are pipeline states for `type: idea` items. A non-idea page using a pipeline state is allowed but unusual."
+    },
+    "distillation_level": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4,
+      "description": "Distillation maturity. 0=raw dump, 1=first pass, 2=distilled, 3=synthesized, 4=expression-ready. Required on wiki pages by convention; the lint command surfaces wiki pages missing this field as distillation debt."
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"],
+      "description": "Trust level of the claims on the page. Orthogonal to `distillation_level` — distillation tracks maturity, confidence tracks reliability. A level-3 page can be confidence-low if its sources are weak."
+    },
+    "source_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of independent sources backing the page's claims."
+    },
+    "last_verified": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Date the claims were last cross-checked against external sources."
+    },
+    "supersedes": {
+      "type": "string",
+      "description": "Relative path to an older page that this page replaces. Pair with `superseded_by` on the older page to make the chain bidirectional."
+    },
+    "superseded_by": {
+      "type": "string",
+      "description": "Relative path to a newer page that replaces this one. Prevents silent contradictions sitting in the wiki."
+    },
+    "related_paths": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Cross-references as relative paths from the source file's directory. Replaces v1's deprecated `related:` (Obsidian wikilinks) field."
+    },
+    "course": {
+      "type": "string",
+      "description": "Course slug — when the page belongs to a specific course in `sources/courses/`."
+    },
+    "step": {
+      "type": "string",
+      "description": "Course step or module identifier."
+    },
+    "project": {
+      "type": "string",
+      "description": "Project slug — when the page belongs to a specific project under `projects/`."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "type": { "const": "idea" } },
+        "required": ["type"]
+      },
+      "then": {
+        "required": [
+          "title",
+          "type",
+          "layer",
+          "language",
+          "tags",
+          "updated",
+          "status",
+          "angle",
+          "target_channel"
+        ],
+        "properties": {
+          "angle": {
+            "type": "string",
+            "minLength": 10,
+            "description": "One-sentence editorial angle. What makes this idea distinct from N similar pieces on the same topic. Required on `type: idea`."
+          },
+          "target_channel": {
+            "type": "string",
+            "enum": [
+              "milo-ia",
+              "servicios-locales",
+              "sistema-qa",
+              "cuanto-cobro",
+              "kortex",
+              "idea-lab",
+              "cross-project"
+            ],
+            "description": "Destination project. The ingest command routes by THIS field, not by the inbox path. An idea dropped in `/inbox/` with `target_channel: milo-ia` is a Milo IA idea regardless of physical location. Use `cross-project` when the destination is genuinely ambiguous at capture time."
+          },
+          "why_it_works": {
+            "type": "string",
+            "description": "Why the angle engages the target audience. Distinguishes a strong angle from variants of the same surface idea."
+          },
+          "created_in": {
+            "type": "string",
+            "enum": [
+              "claude-code",
+              "claude-ai-mobile",
+              "claude-ai-desktop",
+              "voice"
+            ],
+            "description": "Surface where the idea was captured. Feeds the 'where am I most productive?' metric."
+          },
+          "created_date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "description": "Capture date — distinct from `updated`, which tracks last edit."
+          },
+          "round": {
+            "type": "string",
+            "description": "Round identifier when the idea came from an ideation round (e.g. `2026-04-20-ronda-01`)."
+          },
+          "score_initial": {
+            "type": "integer",
+            "description": "Initial score from the scoring pass (typically /50)."
+          },
+          "surface": {
+            "type": "string",
+            "description": "Execution surface target (e.g. `Claude.ai chat`, `Claude Code`, `Notion`)."
+          },
+          "plan": {
+            "type": "string",
+            "description": "Plan tier required to execute the idea (e.g. `Free`, `Pro`, `Max`)."
+          },
+          "prompt_version": {
+            "type": "string",
+            "description": "Version of the prompt-master that generated the idea."
+          }
+        }
+      }
+    }
+  ]
+}

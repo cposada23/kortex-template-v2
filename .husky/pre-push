@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+# scope: framework
+#
+# pre-push pipeline — currently a no-op placeholder.
+#
+# Future hooks slot in here:
+#   - roster-sync.mjs    — verify .claude/agents-roster.json matches the
+#                          agents present on disk before pushing to origin.
+#   - smoke-tests.mjs    — quick sanity check on schema-bound JSON files.
+#
+# We leave the file in place (with a passing echo) so husky doesn't warn
+# about a missing pre-push, and so adding the first real hook is a one-line
+# diff rather than a new file commit.
+
+echo "pre-push: pass"

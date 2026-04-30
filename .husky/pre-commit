@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+# scope: framework
+#
+# pre-commit pipeline — runs in the order below; first hard failure aborts.
+#
+# Order rationale:
+#   1. Secrets first  — cheapest catastrophic failure to catch. If a key is
+#      about to leak, nothing else matters.
+#   2. Frontmatter    — fast, blocks malformed metadata before it pollutes
+#      the index.
+#   3. Links          — slightly slower (filesystem walks); blocks broken
+#      cross-references.
+#   4. Symlink mirror — root CLAUDE.md/AGENTS.md must stay aligned.
+#   5. Backrefs       — soft (always exits 0). Goes last so its rewrites
+#      benefit from the cleaner state confirmed by the hard hooks above.
+
+node scripts/hooks/validate-secrets.mjs || exit 1
+node scripts/hooks/validate-frontmatter.mjs || exit 1
+node scripts/hooks/validate-links.mjs || exit 1
+node scripts/hooks/validate-symlink.mjs || exit 1
+node scripts/hooks/update-backrefs.mjs
