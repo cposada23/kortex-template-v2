@@ -66,7 +66,7 @@ if (values.headless) {
   // Headless validation. Required: name, lang. Others have defaults.
   if (!values.name || !values.lang) {
     console.error('setup: --headless requires --name and --lang.');
-    console.error('Example: pnpm setup --headless --name "Camilo" --lang es --git y');
+    console.error('Example: pnpm setup --headless --name "{{owner_name}}" --lang es --git y');
     process.exit(1);
   }
   profile = {

@@ -44,17 +44,18 @@ Decisions that shape the project. Brief rationale for each.
 
 Most important files for this project — relative paths and one-line
 summaries. List with markdown links, e.g.
-`[INDEX.md](../INDEX.md)` for the project file map and
-`[TODO.md](../TODO.md)` for the active task list.
+`INDEX.md` for the project file map and
+`TODO.md` for the active task list.
 
 ## Related wiki pages
 
 List linked wiki pages with relative markdown links — concepts,
 references, areas, and decisions that connect to this project.
-Example shape: `[Concept](../../../wiki/concepts/<slug>.md)`.
+Example shape: `Concept`.
 
 ## Backlinks
 <!-- backrefs:start -->
 - [AGENTS](../../AGENTS.md)
 - [TODO](../../projects/example-project/TODO.md)
 <!-- backrefs:end -->
+

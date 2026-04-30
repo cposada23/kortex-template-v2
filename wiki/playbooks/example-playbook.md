@@ -132,6 +132,9 @@ After ingest, the file should be:
 
 ## Backlinks
 <!-- backrefs:start -->
+- [write-authority](../../.claude/rules/write-authority.md)
 - [README](../../README.md)
+- [types](../../schema/types.md)
 - [example-concept](../concepts/example-concept.md)
 <!-- backrefs:end -->
+

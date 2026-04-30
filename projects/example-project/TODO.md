@@ -52,6 +52,10 @@ shape, write a brief in `references/project-brief.md` instead.
 
 ## Backlinks
 <!-- backrefs:start -->
+- [project-brief](../../.claude/templates/project-brief.md)
 - [AGENTS](AGENTS.md)
 - [INDEX](INDEX.md)
+- [browser-automation-playwright](../../wiki/playbooks/claude-code-workflows/browser-automation-playwright.md)
+- [cross-ai-validation](../../wiki/playbooks/cross-ai-validation.md)
 <!-- backrefs:end -->
+

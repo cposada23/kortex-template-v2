@@ -61,7 +61,7 @@ if (existsSync(dailyPath)) {
 
 await mkdir(journalDir, { recursive: true });
 
-// Pick the template language. Default Spanish per Camilo's setup, but the
+// Pick the template language. Default Spanish per {{owner_name}}'s setup, but the
 // template is also valid English (sections rename cleanly).
 const tpl = values.lang === 'en' ? englishTemplate(today) : spanishTemplate(today);
 

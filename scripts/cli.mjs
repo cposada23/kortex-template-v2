@@ -39,6 +39,9 @@ const COMMANDS = [
   'query',               // full-text + recency search
   'safe-change',         // branched change workflow
   'daily',               // create today's daily journal
+  'new',                 // interactive scaffolder for a new content page
+  'review',              // surface 3 random notes that need attention
+  'build-index',         // rebuild every INDEX.md from filesystem + frontmatter
   'read-last-handoff',   // print/copy last handoff section
   'sync-to-template',    // mirror personal artifacts to public template (mykortex only)
 ];

@@ -22,7 +22,7 @@ drifted to ~42 ad-hoc values across the corpus and v2 exists in part
 to undo that.
 
 The canonical list lives in
-[frontmatter.json](frontmatter.json) under `properties.type.enum` —
+frontmatter.json under `properties.type.enum` —
 this document and that JSON enum stay in sync.
 
 ---
@@ -107,7 +107,7 @@ Top-level project entity. One per active project folder. The project's
 
 **When to use:** creating a new project folder.
 
-**Example:** `projects/milo-ia/project.md`
+**Example:** `projects/example-project/project.md`
 
 ---
 
@@ -117,7 +117,7 @@ Per-project TODO list. Living document, edited frequently.
 
 **When to use:** every active project gets exactly one of these.
 
-**Example:** `projects/milo-ia/TODO.md`
+**Example:** `projects/example-project/TODO.md`
 
 ---
 
@@ -162,9 +162,9 @@ field decides where the idea ends up after triage, regardless of
 which inbox you dropped it in.
 
 **Schema specifics:** see the `if/then` block in
-[frontmatter.json](frontmatter.json).
+frontmatter.json.
 
-**Example:** `projects/milo-ia/inbox/skool-from-colombia.md`
+**Example:** `projects/example-project/inbox/skool-from-colombia.md`
 
 ---
 
@@ -271,3 +271,4 @@ No types are removed in v2.
 - [README](README.md)
 - [example-playbook](../wiki/playbooks/example-playbook.md)
 <!-- backrefs:end -->
+

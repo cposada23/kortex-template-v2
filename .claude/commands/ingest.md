@@ -21,7 +21,7 @@ For each markdown item in any inbox:
 1. **Parse frontmatter.**
 2. **Idea routing (`type: idea`):** routes by `target_channel`, NOT by
    inbox path. `inbox/foo.md` with `target_channel: milo-ia` lands in
-   `projects/milo-ia/` regardless of where it was dropped. Sub-folder
+   `projects/example-project/` regardless of where it was dropped. Sub-folder
    inside the project is picked from `status` (reserva → ideation-bank/
    reserva, in-production → piezas/, etc.). If `target_channel` is
    missing or `cross-project`, the file stays in inbox flagged
