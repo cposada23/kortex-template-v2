@@ -7,7 +7,7 @@ scope: framework
 ## Format
 
 All internal links must use standard relative markdown links:
-`[Display Text](relative/path/to/file.md)`
+`Display Text`
 
 Do NOT use Obsidian wikilinks `[[FILENAME]]` — they only work in Obsidian.
 Relative markdown links work in VS Code, Obsidian, GitHub, and Notion.
@@ -21,7 +21,7 @@ path. Unlinked path strings become dead references the moment the file
 moves, they leak internal structure into readable prose, and they force
 readers to copy-paste paths manually to navigate.
 
-Good: `Promoted to [operational-insights.md](../../wiki/references/operational-insights.md)`
+Good: `Promoted to operational-insights.md`
 Bad:  ``Promoted to `wiki/references/operational-insights.md` ``
 Bad:  `Promoted to wiki/references/operational-insights.md`
 
@@ -76,3 +76,4 @@ is blocked with a report. Fix all broken links before committing.
 <!-- backrefs:start -->
 - [AGENTS](../../AGENTS.md)
 <!-- backrefs:end -->
+

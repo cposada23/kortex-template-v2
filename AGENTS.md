@@ -81,7 +81,7 @@ it lives in the project root and `.claude/`.
 ## 3. Schema
 
 The single source of truth for the frontmatter schema is
-[schema/frontmatter.json](schema/frontmatter.json). Required fields
+schema/frontmatter.json. Required fields
 on every indexable `.md` file:
 
 ```yaml
@@ -169,11 +169,11 @@ that INDEX. There is no separate index per nested subfolder.
 
 | New file path | Update this INDEX |
 |---|---|
-| `wiki/<...>.md` | [wiki/INDEX.md](wiki/INDEX.md) |
+| `wiki/<...>.md` | wiki/INDEX.md |
 | `projects/<name>/<...>.md` | `projects/<name>/INDEX.md` |
 | `learnings/<name>/<...>.md` | `learnings/<name>/INDEX.md` |
-| `inbox/<file>.md` | [inbox/INBOX.md](inbox/INBOX.md) if it changes the snapshot |
-| `output/<file>.md` | [output/INDEX.md](output/INDEX.md) |
+| `inbox/<file>.md` | inbox/INBOX.md if it changes the snapshot |
+| `output/<file>.md` | output/INDEX.md |
 
 A whole new project or learning folder gets its own INDEX.md from
 [.claude/templates/project-index.md](.claude/templates/project-index.md)
@@ -209,7 +209,7 @@ index that `pnpm kortex query` uses.
 ## 6. Frontmatter rule and exceptions
 
 Every new `.md` file created in this project must include YAML
-frontmatter per [schema/frontmatter.json](schema/frontmatter.json).
+frontmatter per schema/frontmatter.json.
 
 **Frontmatter is NOT required on these** — they are schema or
 operational files, not indexable content:
@@ -279,7 +279,7 @@ the right destination.
 ## 9. Link rule
 
 All internal links use **standard relative markdown**:
-`[text](path/to/file.md)`. No wikilinks. The pre-commit hook at
+`text`. No wikilinks. The pre-commit hook at
 `scripts/hooks/validate-links.mjs` blocks broken internal links.
 
 File mentions in prose **must be links**, not bare paths or
@@ -437,9 +437,19 @@ new entry that supersedes it.
 
 ## Backlinks
 <!-- backrefs:start -->
+- [links](.claude/rules/links.md)
+- [scope](.claude/rules/scope.md)
+- [verification](.claude/rules/verification.md)
 - [write-authority](.claude/rules/write-authority.md)
+- [area](.claude/templates/area.md)
+- [concept](.claude/templates/concept.md)
 - [learning-index](.claude/templates/learning-index.md)
+- [project-brief](.claude/templates/project-brief.md)
 - [project-index](.claude/templates/project-index.md)
+- [session-end](.claude/templates/session-end.md)
 - [README](README.md)
 - [AGENTS](projects/example-project/AGENTS.md)
+- [types](schema/types.md)
+- [0001-example-adr](wiki/decisions/0001-example-adr.md)
 <!-- backrefs:end -->
+

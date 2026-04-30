@@ -74,12 +74,16 @@ cross-project workflows only.
 For an agent reading this project for the first time, follow this
 order:
 
-1. [README.md](README.md) — human-readable overview
-2. [INDEX.md](INDEX.md) — full file map
+1. README.md — human-readable overview
+2. INDEX.md — full file map
 3. [TODO.md](TODO.md) — what's active right now
 4. Most recent file in any subfolder — what was edited last
 
 ## Backlinks
 <!-- backrefs:start -->
+- [AGENTS](../../AGENTS.md)
 - [INDEX](INDEX.md)
+- [README](README.md)
+- [TODO](TODO.md)
 <!-- backrefs:end -->
+

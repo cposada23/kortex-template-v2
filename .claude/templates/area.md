@@ -29,9 +29,10 @@ ignored.
 ## Related pages
 
 List the concepts, references, and projects this area connects to.
-Use relative markdown links (e.g. `[Concept](../concepts/<slug>.md)`).
+Use relative markdown links (e.g. `Concept`).
 
 ## Backlinks
 <!-- backrefs:start -->
 - [AGENTS](../../AGENTS.md)
 <!-- backrefs:end -->
+

@@ -117,7 +117,7 @@ All outputs live next to the input file in
 ```
 
 The cost log is global, at
-[output/costs/cross-validate-log.md](../../output/costs/cross-validate-log.md).
+output/costs/cross-validate-log.md.
 
 Multiple runs on the same day on the same input get suffixed dates:
 `YYYY-MM-DD-2`, `YYYY-MM-DD-3`, etc.
@@ -128,11 +128,18 @@ Multiple runs on the same day on the same input get suffixed dates:
 
 - Canonical playbook: [wiki/playbooks/cross-ai-validation.md](../../wiki/playbooks/cross-ai-validation.md)
 - API onboarding: `wiki/playbooks/api-onboarding/`
-- Cost log: [output/costs/cross-validate-log.md](../../output/costs/cross-validate-log.md)
+- Cost log: output/costs/cross-validate-log.md
 - Verification rule (factual claims): [.claude/rules/verification.md](../rules/verification.md)
-- Pre-commit API key validator: [scripts/hooks/](../../scripts/hooks/)
+- Pre-commit API key validator: scripts/hooks/
 
 ## Backlinks
 <!-- backrefs:start -->
+- [verification](../rules/verification.md)
+- [cross-validate-log](../../output/costs/cross-validate-log.md)
 - [cross-ai-validation](../../wiki/playbooks/cross-ai-validation.md)
+- [chatgpt-prompt-template](../../wiki/playbooks/cross-ai-validation/templates/chatgpt-prompt-template.md)
+- [claude-prompt-template](../../wiki/playbooks/cross-ai-validation/templates/claude-prompt-template.md)
+- [gemini-prompt-template](../../wiki/playbooks/cross-ai-validation/templates/gemini-prompt-template.md)
+- [perplexity-prompt-template](../../wiki/playbooks/cross-ai-validation/templates/perplexity-prompt-template.md)
 <!-- backrefs:end -->
+
