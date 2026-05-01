@@ -49,13 +49,9 @@ Before writing each file to the template, the redactor applies, in order:
 4. **Auto-derived path rule** — `projects/<private-name>/...` becomes
    `projects/example-project/...`. The list of private names is derived
    live from `projects/*/` (anything other than `example-project/`).
-5. **Smart backref filter** — bullets in `
-## Backlinks
-<!-- backrefs:start -->
-_No incoming links._
-<!-- backrefs:end -->
-`
-   blocks are dropped if their target is not in the sync set.
+5. **Smart backref filter** — bullets in the auto-managed Backlinks
+   block (between `backrefs:start` and `backrefs:end` HTML comment
+   markers) are dropped if their target is not in the sync set.
 6. **Drop-line patterns** — full-line regex matches removed.
 
 Rules live in `.kortex/sync-redactions.json` (gitignored, owner-specific).

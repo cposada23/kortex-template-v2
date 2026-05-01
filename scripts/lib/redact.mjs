@@ -152,9 +152,6 @@ export function redact(content, opts = {}) {
         if (target.startsWith('#')) return full;
         const resolved = resolveRelative(opts.fromPath, target);
         if (opts.syncSet.has(resolved)) return full;
-        if (process.env.KORTEX_REDACT_DEBUG) {
-          console.error(`[demote] ${opts.fromPath}: ${target} → resolved ${resolved} not in syncSet`);
-        }
         hits.links_demoted = (hits.links_demoted || 0) + 1;
         return text;
       });

@@ -144,6 +144,28 @@ function writeCache(cachePath, edges) {
   );
 }
 
+// Find the LAST occurrence of `marker` that begins at the start of a line.
+// Mentions inside inline-code spans or running prose are preceded by a
+// non-newline character and skipped. Picking the LAST line-anchored hit also
+// covers the rarer case of a doc that shows the marker in a fenced code block
+// AND has a real auto-block at the bottom — the bottom one wins.
+//
+// Why this exists: a previous version used `content.indexOf(BLOCK_START)`,
+// which matched the first prose mention inside an inline-code span and led
+// the rewriter to insert an empty "## Backlinks" block mid-doc, corrupting
+// the file. See [.claude/commands/sync-to-template.md](../../.claude/commands/sync-to-template.md)
+// commit 49ef4d5 for the incident that motivated this fix.
+function lastLineStartIndexOf(content, marker) {
+  let from = content.length;
+  while (from >= 0) {
+    const idx = content.lastIndexOf(marker, from);
+    if (idx === -1) return -1;
+    if (idx === 0 || content[idx - 1] === '\n') return idx;
+    from = idx - 1;
+  }
+  return -1;
+}
+
 // Rewrite the `## Backlinks` block at the bottom of `content` to reflect
 // `referrers` (an array of repo-relative paths). Returns the new content.
 //
@@ -175,8 +197,8 @@ function rewriteBacklinks(content, referrers, sourceFileRel) {
 
   // Case 1: marker block exists → replace from BLOCK_START backwards to the
   // heading (since they were written together) through BLOCK_END.
-  const startIdx = content.indexOf(BLOCK_START);
-  const endIdx = content.indexOf(BLOCK_END);
+  const startIdx = lastLineStartIndexOf(content, BLOCK_START);
+  const endIdx = lastLineStartIndexOf(content, BLOCK_END);
   if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
     // Walk backward from BLOCK_START to find the heading line above it (if any),
     // since we wrote them as a unit. We tolerate the user editing the heading
