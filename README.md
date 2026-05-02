@@ -1,157 +1,191 @@
 # Kortex
 
-🧠 A personal knowledge graph that compounds with every course you
-take, every experiment you run, and every conversation you have with
-an AI.
+🧠 Un grafo de conocimiento personal que se compone con cada curso que
+tomás, cada experimento que corrés, y cada conversación que tenés con
+una IA.
 
-Kortex is a markdown-first, AI-native template for keeping the
-knowledge you build over the years in one place — versioned with
-git, editable from any tool, readable by any frontier AI model, and
-private by default.
-
----
-
-## What problem does it solve?
-
-- **Your notes are scattered.** Bookmarks, voice memos, Notion
-  databases, half-finished docs, screenshots in your camera roll.
-  Each tool stops being useful the moment you switch tools. Kortex
-  is a single repo of plain `.md` files — nothing is locked to a
-  vendor.
-- **AI agents lose context across sessions.** Without a shared
-  substrate, every conversation starts from zero. Kortex is the
-  shared substrate: any agent can read any page, follow links,
-  understand the schema, and write back into it through the
-  validated commands.
-- **Knowledge degrades when you don't process it.** Courses you
-  finish but never apply. Books with notes you never re-read. Kortex
-  has explicit zones for raw input (`inbox/`, `learnings/`),
-  distilled synthesis (`wiki/`), and active execution (`projects/`)
-  — moving from one to the next is the work, and the schema makes
-  the boundaries visible.
+Kortex es una plantilla markdown-first, AI-native para mantener el
+conocimiento que construís a lo largo de los años en un solo lugar —
+versionado con git, editable desde cualquier herramienta, legible por
+cualquier modelo de IA frontier, y privado por default.
 
 ---
 
-## 5-minute quickstart
+## ¿Qué problema resuelve?
+
+- **Tus notas están dispersas.** Bookmarks, memos de voz, bases de
+  Notion, docs a medio terminar, screenshots en el rollo de la cámara.
+  Cada herramienta deja de servirte el momento en que cambiás de
+  herramienta. Kortex es un solo repo de archivos `.md` planos —
+  nada queda atado a un proveedor.
+- **Los agentes IA pierden contexto entre sesiones.** Sin un sustrato
+  compartido, cada conversación arranca de cero. Kortex es el sustrato
+  compartido: cualquier agente puede leer cualquier página, seguir
+  links, entender el schema, y escribir de vuelta a través de los
+  comandos validados.
+- **El conocimiento se degrada cuando no lo procesás.** Cursos que
+  terminás pero nunca aplicás. Libros con notas que nunca releés.
+  Kortex tiene zonas explícitas para input crudo (`inbox/`,
+  `learnings/`), síntesis destilada (`wiki/`), y ejecución activa
+  (`projects/`) — pasar de una zona a la siguiente es el trabajo, y
+  el schema hace visibles los límites.
+
+---
+
+## Requisitos previos
+
+Antes de clonar, verificá que tengas estas cosas en tu máquina:
+
+- **Node.js 20 o más nuevo** — necesario para los scripts del CLI.
+  Verificá con `node --version`.
+- **pnpm** — el gestor de paquetes que usa Kortex. Instalalo con
+  `npm install -g pnpm` si todavía no lo tenés.
+- **Git 2.x** — incluye también el entorno `bash` que los hooks
+  necesitan.
+  - **Linux / macOS:** git y bash vienen preinstalados normalmente.
+  - **Windows:** instalá [Git for Windows](https://git-scm.com/download/win),
+    que incluye un entorno bash que Husky usa para correr los hooks.
+    WSL funciona igual de bien. Sin Git for Windows ni WSL, los hooks
+    no se disparan en los commits — los commits siguen funcionando
+    pero perdés los validadores automáticos de frontmatter / links /
+    caché. Mirá [wiki/references/husky.md](wiki/references/husky.md)
+    para el setup completo de hooks.
+
+Opcional pero recomendado:
+
+- **VS Code** con el preview de markdown — Kortex es markdown-first y
+  la experiencia de IDE está construida alrededor de eso.
+- **GitHub Desktop** si preferís una UI antes que el CLI para
+  operaciones de git.
+
+## Arranque en 5 minutos
 
 ```bash
-git clone https://github.com/<your-username>/your-mykortex
-cd your-mykortex
-pnpm install
-pnpm kortex setup     # interactive — sets owner, channel, language
-pnpm kortex daily     # opens today's journal entry
+git clone https://github.com/<tu-usuario>/tu-mykortex
+cd tu-mykortex
+pnpm install          # también instala los hooks de husky
+pnpm kortex setup     # interactivo — define dueño, canal, idioma
+pnpm kortex daily     # abre la entrada del journal de hoy
 ```
 
-That's it. From there:
+Listo. Desde ahí:
 
-- Drop ideas into `inbox/`. Run `pnpm kortex ingest` weekly to
-  triage them.
-- Add a course to `learnings/` when you start one. Promote insights
-  to `wiki/` when you finish a module.
-- Spin up a project under `projects/` when something has a goal and
-  an end date.
-- Run `pnpm kortex health` monthly to catch stale pages, broken
-  links, and frontmatter drift.
+- Tirá ideas en `inbox/`. Corré `pnpm kortex ingest` semanalmente
+  para triar.
+- Agregá un curso a `learnings/` cuando arrancás uno. Promové los
+  insights a `wiki/` cuando terminás un módulo.
+- Abrí un proyecto bajo `projects/` cuando algo tiene meta y fecha
+  de cierre.
+- Corré `pnpm kortex health` mensualmente para atrapar páginas
+  obsoletas, links rotos y drift de frontmatter.
 
 ---
 
-## The five zones
+## Las cinco zonas
 
 ```
-inbox/      Capture zone     Raw input. Zero friction. AI can write here.
-wiki/       Synthesis zone   Distilled atomic pages. Cross-referenced.
-projects/   Project zone     Active execution per project.
-learnings/  Learning zone    Structured input — courses, books, talks.
-output/     Ephemeral zone   Session notes, lint reports, cost logs.
+inbox/      Zona de captura     Input crudo. Cero fricción. La IA puede escribir aquí.
+wiki/       Zona de síntesis    Páginas atómicas destiladas. Con cross-references.
+projects/   Zona de proyectos   Ejecución activa por proyecto.
+learnings/  Zona de aprendizaje Input estructurado — cursos, libros, charlas.
+output/     Zona efímera        Notas de sesión, reportes de lint, logs de costo.
 ```
 
-The full rules for each zone live in
-[AGENTS.md](AGENTS.md) — that file is the operating manual for both
-you and any AI agent working in this repo. (`CLAUDE.md` is a symlink
-to `AGENTS.md` so both names resolve to the same content.)
+Las reglas completas de cada zona viven en
+[AGENTS.md](AGENTS.md) — ese archivo es el manual operativo tanto
+para vos como para cualquier agente IA trabajando en este repo.
+(`CLAUDE.md` es un symlink a `AGENTS.md`, ambos nombres resuelven al
+mismo contenido.)
 
 ---
 
-## Your first playbook
+## Tu primer playbook
 
-A playbook is a multi-step procedure you've codified — the kind of
-thing you'd otherwise re-discover from scratch every six months.
-Three steps to write one:
+Un playbook es un procedimiento de varios pasos que codificaste — el
+tipo de cosa que de otro modo redescubrirías de cero cada seis meses.
+Tres pasos para escribir uno:
 
-1. **Copy the template.**
+1. **Copiá la plantilla.**
    ```bash
-   cp .claude/templates/concept.md wiki/playbooks/<your-slug>.md
+   cp .claude/templates/concept.md wiki/playbooks/<tu-slug>.md
    ```
-   Open the file, change `type: concept` to `type: playbook`, edit
-   the title and tags.
+   Abrí el archivo, cambiá `type: concept` por `type: playbook`,
+   editá título y tags.
 
-2. **Write the procedure.** One step per heading. Include
-   commands, file paths, and decision points. Aim for the length
-   that lets future-you re-execute the procedure without
-   reconstructing context.
+2. **Escribí el procedimiento.** Un paso por heading. Incluí comandos,
+   rutas de archivos, y puntos de decisión. Apuntá al largo que le
+   permita a vos-del-futuro re-ejecutar el procedimiento sin
+   reconstruir contexto.
 
-3. **Commit.**
+3. **Hacé commit.**
    ```bash
    pnpm kortex safe-change "add <slug> playbook"
    ```
-   The pre-commit hook validates frontmatter and links. If anything
-   is off, it tells you exactly what to fix before the commit goes
-   through.
+   El hook de pre-commit valida frontmatter y links. Si algo está mal,
+   te dice exactamente qué arreglar antes de que el commit pase.
 
-The example at [wiki/playbooks/example-playbook.md](wiki/playbooks/example-playbook.md)
-walks through this end-to-end with real content.
-
----
-
-## Git for non-developers (optional, Chapter 2)
-
-If you've never used git: the commands above (`pnpm kortex
-safe-change`, etc.) handle most of the day-to-day work for you.
-When you want a visual interface, install
-[GitHub Desktop](https://desktop.github.com/) — it shows the same
-commits and branches as the CLI but with a UI. Either approach
-works; pick the one that doesn't get in the way.
+El ejemplo en [wiki/playbooks/example-playbook.md](wiki/playbooks/example-playbook.md)
+recorre esto end-to-end con contenido real.
 
 ---
 
-## Cheat sheet — when to use which command
+## Git para no-developers (opcional, Capítulo 2)
 
-| Want to... | Run |
+Si nunca usaste git: los comandos de arriba (`pnpm kortex
+safe-change`, etc.) se encargan de la mayoría del trabajo del día a
+día por vos. Cuando quieras una interfaz visual, instalá
+[GitHub Desktop](https://desktop.github.com/) — muestra los mismos
+commits y branches que el CLI pero con UI. Cualquiera de los dos
+enfoques funciona; agarrá el que no se te meta en el camino.
+
+---
+
+## Tabla rápida — qué comando usar
+
+| Querés... | Corré |
 |---|---|
-| Open today's journal | `pnpm kortex daily` |
-| Triage everything in `inbox/` | `pnpm kortex ingest` |
-| Search the knowledge base | `pnpm kortex query "<terms>"` |
-| Make a multi-file change safely | `pnpm kortex safe-change "<msg>"` |
-| Check repo health | `pnpm kortex health` |
-| Resume after a missed session | `pnpm kortex read-last-handoff` |
-| Save a session bridge | `pnpm kortex bridge` |
-| Mirror your framework changes to the public template | `pnpm kortex sync-to-template` |
+| Abrir el journal de hoy | `pnpm kortex daily` |
+| Triar todo en `inbox/` | `pnpm kortex ingest` |
+| Buscar en la base de conocimiento | `pnpm kortex query "<términos>"` |
+| Hacer un cambio multi-archivo seguro | `pnpm kortex safe-change "<mensaje>"` |
+| Chequear la salud del repo | `pnpm kortex health` |
+| Retomar después de una sesión perdida | `pnpm kortex read-last-handoff` |
+| Guardar un puente de sesión | `pnpm kortex bridge` |
 
-Full command docs: [.claude/commands/](.claude/commands/).
-
----
-
-## Trouble?
-
-- **Pre-commit hook blocks your commit?** Read the message — it lists
-  the exact files and rules that failed. Fix them and commit again.
-- **A command behaves unexpectedly?** Run `pnpm kortex health` —
-  it does a sweep for the most common drift patterns and reports
-  what it finds.
-- **Something is broken at the schema layer?** Open an issue on the
-  template repo. Schema changes are the kind of thing the framework
-  needs to fix once for everyone.
+Documentación completa por comando: .claude/commands/.
 
 ---
 
-## License & contributing
+## ¿Problemas?
 
-MIT. Fork it, customize it, ship your own. The template is the
-starting point — your version belongs to you.
+- **¿El hook de pre-commit te bloqueó el commit?** Leé el mensaje —
+  lista los archivos y reglas exactas que fallaron. Arreglalos y
+  commiteá de nuevo.
+- **¿Un comando se comporta raro?** Corré `pnpm kortex health` — hace
+  un barrido de los patrones de drift más comunes y reporta lo que
+  encuentra.
+- **¿Algo está roto a nivel schema?** Abrí un issue en el repo del
+  template. Los cambios de schema son el tipo de cosa que el framework
+  necesita arreglar una vez para todos.
 
-If you find a bug in the framework (commands, hooks, schema, the
-template scaffold), pull requests are welcome. If you build a new
-playbook or workflow on top of the framework that you think others
-would benefit from, open an issue describing it before sending a
-PR — the goal is to keep the framework small and let individual
-playbooks live in personal forks.
+---
+
+## Licencia y contribuciones
+
+MIT. Forkealo, customizalo, shipea el tuyo. El template es el punto de
+partida — tu versión te pertenece a vos.
+
+Si encontrás un bug en el framework (comandos, hooks, schema, el
+scaffold del template), los pull requests son bienvenidos. Si
+construís un nuevo playbook o workflow encima del framework que pensás
+que a otros les serviría, abrí un issue describiéndolo antes de
+mandar un PR — el objetivo es mantener el framework chico y dejar que
+los playbooks individuales vivan en forks personales.
+
+## Backlinks
+<!-- backrefs:start -->
+- [AGENTS](AGENTS.md)
+- [example-playbook](wiki/playbooks/example-playbook.md)
+- [husky](wiki/references/husky.md)
+<!-- backrefs:end -->
+

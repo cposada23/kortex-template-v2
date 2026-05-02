@@ -43,7 +43,8 @@ const COMMANDS = [
   'review',              // surface 3 random notes that need attention
   'build-index',         // rebuild every INDEX.md from filesystem + frontmatter
   'read-last-handoff',   // print/copy last handoff section
-  'sync-to-template',    // mirror personal artifacts to public template (mykortex only)
+  'regen-status',        // recompute .cache/status.json (auto-invoked by .husky/post-commit)
+  'finanzas',            // personal finances dispatcher (project: finanzas-personales — mykortex only)
 ];
 
 // Pull command + args off argv. argv[0] is node, argv[1] is this script,

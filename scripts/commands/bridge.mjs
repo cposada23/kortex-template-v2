@@ -35,6 +35,7 @@ import { readFile, writeFile, mkdir, readdir, appendFile, stat } from 'node:fs/p
 import { existsSync, readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { colors, tag } from '../lib/colors.mjs';
 
 // Standard arg parser. Each mode flag is a boolean and they are mutually
@@ -71,20 +72,26 @@ if (modeCount > 1) {
   process.exit(1);
 }
 
-try {
-  if (values.out) {
-    await bridgeOut(repoRoot, { commit: !values['no-commit'] });
-  } else if (values.handoff) {
-    await bridgeHandoff(repoRoot);
-  } else if (values.recovery) {
-    await bridgeRecovery(repoRoot);
-  } else {
-    await bridgeIn(repoRoot);
+// Only dispatch when this file is the entrypoint. When imported by tests
+// or by regen-status (for hasOpenHandoff), we want the named exports
+// without the bridge-in side effect firing on import.
+const isMain = process.argv[1] === fileURLToPath(import.meta.url);
+if (isMain) {
+  try {
+    if (values.out) {
+      await bridgeOut(repoRoot, { commit: !values['no-commit'] });
+    } else if (values.handoff) {
+      await bridgeHandoff(repoRoot);
+    } else if (values.recovery) {
+      await bridgeRecovery(repoRoot);
+    } else {
+      await bridgeIn(repoRoot);
+    }
+  } catch (err) {
+    console.error(`${tag.fail()} ${err.message}`);
+    if (process.env.DEBUG) console.error(err.stack);
+    process.exit(1);
   }
-} catch (err) {
-  console.error(`${tag.fail()} ${err.message}`);
-  if (process.env.DEBUG) console.error(err.stack);
-  process.exit(1);
 }
 
 // =====================================================================

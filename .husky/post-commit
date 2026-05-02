@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+# scope: framework
+#
+# post-commit pipeline — runs AFTER a successful commit. Failures here do
+# NOT roll back the commit (git doesn't allow that anyway), so we use this
+# hook only for cache regeneration: stale cache is acceptable, blocked
+# commits are not.
+#
+# Currently:
+#   1. regen-status — recompute .cache/status.json so bridge-in and health
+#      see the current snapshot on the next invocation.
+#
+# We pass --quiet so the hook doesn't add a line to every commit's stdout;
+# manual `pnpm kortex regen-status` runs print the success line. The `||
+# true` keeps the hook itself returning 0 even if regen crashes — a missing
+# cache is recoverable, a hook that prints a scary error after every commit
+# is not.
+
+node scripts/commands/regen-status.mjs --quiet || true
