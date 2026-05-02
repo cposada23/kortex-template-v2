@@ -30,6 +30,17 @@ import { parseFile } from '../lib/frontmatter.mjs';
 import { hasOpenHandoff } from './bridge.mjs';
 import { tag } from '../lib/colors.mjs';
 
+// Tunables for the unmigrated-NEXT detector. Declared up here so the
+// constants exist before the top-level `await computeStatus(...)` block
+// runs — Node ESM executes top-down and `const` is hoisted but in TDZ.
+const TASK_VERBS = [
+  'bug', 'fix', 'strip', 'audit', 'renumerar', 'renumber', 'rephrase',
+  'refactor', 'rewrite', 'remove', 'eliminar', 'borrar', 'agregar',
+  'add', 'implement', 'implementar', 'wire', 'crear', 'create',
+  'migrate', 'migrar', 'cleanup', 'limpiar', 'rescatar',
+];
+const NEXT_LOOKBACK_SESSIONS = 5;
+
 const { values } = parseArgs({
   options: {
     repo: { type: 'string' },                    // override repo root (tests)
@@ -56,7 +67,9 @@ if (isMain) {
     const status = await computeStatus(repoRoot);
     await writeStatus(repoRoot, status);
     if (!values.quiet) {
-      console.log(`${tag.ok()} status.json regenerated (${status.priorities.length} priorities, ${status.stale_count} stale, ${status.open_handoffs} open handoffs)`);
+      const fwCount = status.framework_followups?.length ?? 0;
+      const unmigrated = status.unmigrated_next_items?.length ?? 0;
+      console.log(`${tag.ok()} status.json regenerated (${status.priorities.length} priorities, ${fwCount} framework followups, ${unmigrated} unmigrated NEXT, ${status.stale_count} stale, ${status.open_handoffs} open handoffs)`);
     }
   } catch (err) {
     // Surface but don't abort — see header comment on failure mode.
@@ -72,16 +85,29 @@ if (isMain) {
 // =====================================================================
 
 export async function computeStatus(root) {
-  const [priorities, stale_count, open_handoffs] = await Promise.all([
+  const [
+    priorities,
+    stale_count,
+    open_handoffs,
+    framework_followups,
+    in_progress_by_project,
+    unmigrated_next_items,
+  ] = await Promise.all([
     parseActivePriorities(root),
     countStaleWikiPages(root),
     countOpenHandoffs(root),
+    parseFrameworkFollowups(root),
+    parseInProgressByProject(root),
+    detectUnmigratedNext(root),
   ]);
   return {
     generated_at: new Date().toISOString(),
     priorities,
     stale_count,
     open_handoffs,
+    framework_followups,
+    in_progress_by_project,
+    unmigrated_next_items,
   };
 }
 
@@ -171,6 +197,235 @@ export async function countStaleWikiPages(root) {
     count++;
   }
   return count;
+}
+
+// Parse the `## Framework` section of TODO.md and return one followup per
+// top-level bullet. We extract the first sentence (text up to the first
+// period followed by space, or end of bullet) and cap at 200 chars so the
+// post-it stays small. If §Framework is missing we return [].
+//
+// Why first-sentence-only: §Framework bullets carry long explanatory prose
+// (rationale, context, history) that is useful when the owner reads TODO.md
+// directly but noisy in bridge-in. The first sentence is the actionable
+// title; everything after is "why".
+export async function parseFrameworkFollowups(root) {
+  const todoPath = path.join(root, 'TODO.md');
+  if (!existsSync(todoPath)) return [];
+  const body = await readFile(todoPath, 'utf8');
+  const lines = body.split('\n');
+
+  let i = 0;
+  while (i < lines.length) {
+    if (/^##\s+Framework\s*$/.test(lines[i])) break;
+    i++;
+  }
+  if (i >= lines.length) return [];
+  i++;
+
+  const followups = [];
+  while (i < lines.length) {
+    const line = lines[i];
+    if (/^##\s/.test(line) || /^---\s*$/.test(line)) break;
+    // A top-level bullet is `- ` at column 0 (no leading spaces). Sub-bullets
+    // are indented and belong to the prose of the parent.
+    const m = line.match(/^- (.+)$/);
+    if (m) {
+      const title = firstSentence(m[1]);
+      if (title) followups.push({ title });
+    }
+    i++;
+  }
+  return followups;
+}
+
+// Parse the `## Projects` section of TODO.md to extract per-project status
+// strings. The format is two-line stanzas:
+//
+//   - [project-name](projects/project-name/TODO.md)
+//     status: <one-line status string>
+//
+// We pair each project link with its status: line. Returns an object keyed
+// by project slug.
+export async function parseInProgressByProject(root) {
+  const todoPath = path.join(root, 'TODO.md');
+  if (!existsSync(todoPath)) return {};
+  const body = await readFile(todoPath, 'utf8');
+  const lines = body.split('\n');
+
+  let i = 0;
+  while (i < lines.length) {
+    if (/^##\s+Projects\s*$/.test(lines[i])) break;
+    i++;
+  }
+  if (i >= lines.length) return {};
+  i++;
+
+  const byProject = {};
+  while (i < lines.length) {
+    const line = lines[i];
+    if (/^##\s/.test(line)) break;
+    // Match `- [name](projects/name/TODO.md)` — capture the slug.
+    const link = line.match(/^- \[([^\]]+)\]\(projects\/([^/]+)\/TODO\.md\)/);
+    if (link) {
+      const slug = link[2];
+      // Look ahead for the next non-blank `status:` line within 3 lines.
+      for (let j = i + 1; j < Math.min(i + 4, lines.length); j++) {
+        const sm = lines[j].match(/^\s*status:\s*(.+)$/);
+        if (sm) {
+          byProject[slug] = truncate(stripMarkdownLinks(sm[1]).trim(), 200);
+          break;
+        }
+      }
+    }
+    i++;
+  }
+  return byProject;
+}
+
+// Walk the most recent N session files and find NEXT items that look like
+// concrete tasks but are NOT mentioned in TODO.md. This is the "lost work"
+// detector — when a NEXT bullet says "Bug en X" or "Strip Y" but nobody
+// migrated it to TODO.md §Framework, the next bridge-in surfaces it.
+//
+// Heuristic: split NEXT prose on sentence boundaries, keep candidates that
+// start with a known task verb. Cross-check: if any compound identifier
+// (e.g. `update-backrefs.mjs`) anywhere in the NEXT block appears in
+// TODO.md, treat the whole block as migrated.
+//
+// This is intentionally noisy on the side of recall — false positives are
+// cheap (owner ignores them); false negatives are exactly the failure mode
+// we are trying to prevent.
+//
+// TASK_VERBS and NEXT_LOOKBACK_SESSIONS are declared at module scope above
+// the top-level `await computeStatus(...)` block so they exist when the
+// CLI entrypoint fires.
+export async function detectUnmigratedNext(root) {
+  const dir = path.join(root, 'output', 'sessions');
+  if (!existsSync(dir)) return [];
+
+  const todoPath = path.join(root, 'TODO.md');
+  const todoBody = existsSync(todoPath) ? await readFile(todoPath, 'utf8') : '';
+
+  const entries = await readdir(dir);
+  const sessions = entries
+    .filter((f) => /^\d{4}-\d{2}-\d{2}\.md$/.test(f))
+    .sort()
+    .reverse()
+    .slice(0, NEXT_LOOKBACK_SESSIONS);
+
+  const items = [];
+  const seen = new Set();
+  for (const f of sessions) {
+    const body = await readFile(path.join(dir, f), 'utf8');
+    for (const next of extractNextBlocks(body)) {
+      // Block-level migration check: if ANY compound identifier in the
+      // whole NEXT block is mentioned in TODO.md, treat the entire block as
+      // migrated. Otherwise sub-sentences like "Fix: anchor the regex" surface
+      // as orphans even when the parent bug ("Bug in update-backrefs.mjs")
+      // is already tracked.
+      if (mentionedInTodo(next, todoBody)) continue;
+      for (const candidate of splitSentences(next)) {
+        if (!looksLikeTask(candidate)) continue;
+        const title = truncate(stripMarkdownLinks(candidate).trim(), 200);
+        if (!title) continue;
+        // Dedupe across sessions: the same NEXT often re-appears verbatim.
+        const key = title.toLowerCase();
+        if (seen.has(key)) continue;
+        seen.add(key);
+        items.push({ title, from_session: f });
+        // Only surface the first task-like sentence per block — sub-actions
+        // ("Fix: ...", "Repro: ...") belong to the same item.
+        break;
+      }
+    }
+  }
+  return items;
+}
+
+// Extract the body of every `**NEXT:**` line in the session file. NEXT can
+// be a single sentence or a paragraph spanning to the next bold field
+// (`**BLOCKERS:**`, `**STATE:**`, etc.) or end of section.
+function* extractNextBlocks(body) {
+  const lines = body.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const m = lines[i].match(/^\*\*NEXT:\*\*\s*(.*)$/);
+    if (!m) continue;
+    let text = m[1];
+    let j = i + 1;
+    while (j < lines.length) {
+      const nl = lines[j];
+      // Stop at next bold field, header, or blank line followed by header.
+      if (/^\*\*[A-Z][A-Z ]+:\*\*/.test(nl)) break;
+      if (/^#{1,6}\s/.test(nl)) break;
+      if (nl.trim() === '') {
+        // tolerate one blank line, bail if next non-blank is a new field
+        let k = j + 1;
+        while (k < lines.length && lines[k].trim() === '') k++;
+        if (k >= lines.length || /^\*\*[A-Z]/.test(lines[k]) || /^#{1,6}\s/.test(lines[k])) break;
+        text += ' ';
+        j = k;
+        continue;
+      }
+      text += ' ' + nl.trim();
+      j++;
+    }
+    yield text.trim();
+    i = j - 1;
+  }
+}
+
+// Split a paragraph into sentence-ish candidates. We use sentence-final
+// punctuation followed by space + capital letter, plus semicolons. This
+// is rough — perfectly acceptable for a heuristic detector.
+function splitSentences(text) {
+  return text
+    .split(/(?<=[.!?;])\s+(?=[A-ZÁÉÍÓÚÑ(])/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+// True if the sentence starts with (or contains in the first 5 words) a
+// known task verb. We accept either prefix or near-prefix because Spanish
+// often opens with subject ("Bug en X") or article ("Strip de la propiedad").
+function looksLikeTask(sentence) {
+  const head = sentence.toLowerCase().split(/\s+/).slice(0, 5).join(' ');
+  // strip markdown emphasis so `**bug**` matches `bug`
+  const clean = head.replace(/[`*_]/g, '');
+  return TASK_VERBS.some((v) => new RegExp(`\\b${v}\\b`).test(clean));
+}
+
+// True if any 6+ character identifier from the sentence appears in TODO.md.
+// Identifier = word with a dot or hyphen (e.g. `update-backrefs.mjs`,
+// `frontmatter.json`, `sync-eligibility`). Plain words are not enough —
+// "audit" matches too liberally — but compound identifiers are reliable
+// signals that the work was tracked.
+function mentionedInTodo(sentence, todoBody) {
+  const identifiers = sentence.match(/[a-zA-Z0-9_-]{4,}[.\-/][a-zA-Z0-9_./-]+/g) || [];
+  if (identifiers.length === 0) return false;
+  return identifiers.some((id) => todoBody.includes(id));
+}
+
+// Take the first sentence of a string (up to first sentence-final
+// punctuation followed by space+capital, or end). Falls back to truncated
+// input if no boundary is found. Bold-prefixed bullets (`**Title.**
+// rationale...`) return just the bold title.
+function firstSentence(s) {
+  // If the bullet opens with `**...**`, return that as-is — it is the
+  // pre-formatted title and any following prose is rationale.
+  const bold = s.match(/^\*\*([^*]+?)\*\*/);
+  if (bold) return truncate(stripMarkdownLinks(bold[1]).trim().replace(/[.:]+$/, ''), 200);
+  const m = s.match(/^(.+?[.!?])(\s+[A-ZÁÉÍÓÚÑ(]|\s*$)/);
+  const out = m ? m[1] : s;
+  return truncate(stripMarkdownLinks(out).trim(), 200);
+}
+
+function stripMarkdownLinks(s) {
+  return s.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+}
+
+function truncate(s, max) {
+  if (s.length <= max) return s;
+  return s.slice(0, max - 1).trimEnd() + '…';
 }
 
 // Count session files whose last `## Handoff` / `## Bridge-out` marker is

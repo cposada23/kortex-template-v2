@@ -19,6 +19,9 @@ import {
   parseActivePriorities,
   countStaleWikiPages,
   countOpenHandoffs,
+  parseFrameworkFollowups,
+  parseInProgressByProject,
+  detectUnmigratedNext,
   computeStatus,
   writeStatus,
 } from '../../commands/regen-status.mjs';
@@ -49,6 +52,10 @@ async function writeSession(root, name, body) {
   const dir = path.join(root, 'output', 'sessions');
   await mkdir(dir, { recursive: true });
   await writeFile(path.join(dir, name), body);
+}
+
+async function writeTodo(root, body) {
+  await writeFile(path.join(root, 'TODO.md'), body);
 }
 
 // =====================================================================
@@ -210,6 +217,159 @@ test('countOpenHandoffs: ignores non-date filenames', async () => {
 });
 
 // =====================================================================
+// parseFrameworkFollowups
+// =====================================================================
+
+test('parseFrameworkFollowups: extracts top-level bullets from §Framework', async () => {
+  const root = await makeFixtureRoot();
+  await writeTodo(root, [
+    '# TODO',
+    '',
+    '## Framework',
+    '',
+    '- **Bug fix one.** rationale prose.',
+    '- **Strip a thing.** more rationale.',
+    '  - sub-bullet should be ignored',
+    '- Plain bullet without bold. First sentence here. Second sentence.',
+    '',
+    '## Other section',
+    '- not a framework item',
+  ].join('\n'));
+
+  const got = await parseFrameworkFollowups(root);
+  assert.equal(got.length, 3);
+  assert.equal(got[0].title, 'Bug fix one');
+  assert.equal(got[1].title, 'Strip a thing');
+  assert.equal(got[2].title, 'Plain bullet without bold.');
+  await rm(root, { recursive: true, force: true });
+});
+
+test('parseFrameworkFollowups: returns [] when §Framework is missing', async () => {
+  const root = await makeFixtureRoot();
+  await writeTodo(root, '# TODO\n\n## Projects\n- something\n');
+  const got = await parseFrameworkFollowups(root);
+  assert.deepEqual(got, []);
+  await rm(root, { recursive: true, force: true });
+});
+
+test('parseFrameworkFollowups: returns [] when TODO.md missing', async () => {
+  const root = await makeFixtureRoot();
+  const got = await parseFrameworkFollowups(root);
+  assert.deepEqual(got, []);
+  await rm(root, { recursive: true, force: true });
+});
+
+test('parseFrameworkFollowups: strips markdown links from titles', async () => {
+  const root = await makeFixtureRoot();
+  await writeTodo(root, [
+    '## Framework',
+    '',
+    '- **Audit [synced wiki pages](wiki/INDEX.md) for orphans.** rationale.',
+  ].join('\n'));
+  const got = await parseFrameworkFollowups(root);
+  assert.equal(got[0].title, 'Audit synced wiki pages for orphans');
+  await rm(root, { recursive: true, force: true });
+});
+
+// =====================================================================
+// parseInProgressByProject
+// =====================================================================
+
+test('parseInProgressByProject: pairs project links with status lines', async () => {
+  const root = await makeFixtureRoot();
+  await writeTodo(root, [
+    '## Projects',
+    '- [proj-one](projects/proj-one/TODO.md)',
+    '  status: 2 in progress, 1 backlog',
+    '- [proj-two](projects/proj-two/TODO.md)',
+    '  status: 1 done',
+    '',
+    '## Other',
+    '- ignored',
+  ].join('\n'));
+
+  const got = await parseInProgressByProject(root);
+  assert.deepEqual(got, {
+    'proj-one': '2 in progress, 1 backlog',
+    'proj-two': '1 done',
+  });
+  await rm(root, { recursive: true, force: true });
+});
+
+test('parseInProgressByProject: skips dropped projects (~~name~~)', async () => {
+  const root = await makeFixtureRoot();
+  await writeTodo(root, [
+    '## Projects',
+    '- ~~old-proj~~ <!-- DROPPED -->',
+    '- [active-proj](projects/active-proj/TODO.md)',
+    '  status: 3 in progress',
+  ].join('\n'));
+  const got = await parseInProgressByProject(root);
+  assert.deepEqual(got, { 'active-proj': '3 in progress' });
+  await rm(root, { recursive: true, force: true });
+});
+
+test('parseInProgressByProject: returns {} when TODO.md missing', async () => {
+  const root = await makeFixtureRoot();
+  const got = await parseInProgressByProject(root);
+  assert.deepEqual(got, {});
+  await rm(root, { recursive: true, force: true });
+});
+
+// =====================================================================
+// detectUnmigratedNext
+// =====================================================================
+
+test('detectUnmigratedNext: surfaces NEXT items absent from TODO.md', async () => {
+  const root = await makeFixtureRoot();
+  await writeTodo(root, '## Framework\n- existing item.\n');
+  await writeSession(root, '2026-05-01.md', [
+    '## Bridge-out 11:00',
+    '',
+    '**STATE:** sesión.',
+    '**NEXT:** Bug en `forgotten-script.mjs`: regex roto que afecta builds.',
+    '**BLOCKERS:** none.',
+  ].join('\n'));
+
+  const got = await detectUnmigratedNext(root);
+  assert.equal(got.length, 1);
+  assert.match(got[0].title, /Bug en/);
+  assert.equal(got[0].from_session, '2026-05-01.md');
+  await rm(root, { recursive: true, force: true });
+});
+
+test('detectUnmigratedNext: skips block when any identifier matches TODO.md', async () => {
+  const root = await makeFixtureRoot();
+  await writeTodo(root, '## Framework\n- Bug en `tracked-script.mjs` ya capturado.\n');
+  await writeSession(root, '2026-05-01.md', [
+    '**NEXT:** Bug en `tracked-script.mjs`: detalles. Fix: anchor regex.',
+  ].join('\n'));
+
+  const got = await detectUnmigratedNext(root);
+  assert.deepEqual(got, []);
+  await rm(root, { recursive: true, force: true });
+});
+
+test('detectUnmigratedNext: dedupes across sessions with same NEXT', async () => {
+  const root = await makeFixtureRoot();
+  await writeTodo(root, '## Framework\n- nothing.\n');
+  const next = '**NEXT:** Strip the `legacy-thing.json` field from sync output.\n';
+  await writeSession(root, '2026-05-01.md', next);
+  await writeSession(root, '2026-05-02.md', next);
+
+  const got = await detectUnmigratedNext(root);
+  assert.equal(got.length, 1);
+  await rm(root, { recursive: true, force: true });
+});
+
+test('detectUnmigratedNext: returns [] when no sessions exist', async () => {
+  const root = await makeFixtureRoot();
+  const got = await detectUnmigratedNext(root);
+  assert.deepEqual(got, []);
+  await rm(root, { recursive: true, force: true });
+});
+
+// =====================================================================
 // computeStatus + writeStatus round-trip.
 // =====================================================================
 
@@ -222,6 +382,10 @@ test('computeStatus: returns all required schema fields', async () => {
   assert.deepEqual(status.priorities, ['p1']);
   assert.equal(status.stale_count, 0);
   assert.equal(status.open_handoffs, 0);
+  // New fields default to empty containers when sources are missing.
+  assert.deepEqual(status.framework_followups, []);
+  assert.deepEqual(status.in_progress_by_project, {});
+  assert.deepEqual(status.unmigrated_next_items, []);
   await rm(root, { recursive: true, force: true });
 });
 
