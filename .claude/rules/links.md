@@ -75,5 +75,6 @@ is blocked with a report. Fix all broken links before committing.
 ## Backlinks
 <!-- backrefs:start -->
 - [AGENTS](../../AGENTS.md)
+- [husky](../../wiki/references/husky.md)
 <!-- backrefs:end -->
 

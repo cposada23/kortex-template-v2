@@ -81,7 +81,7 @@ it lives in the project root and `.claude/`.
 ## 3. Schema
 
 The single source of truth for the frontmatter schema is
-schema/frontmatter.json. Required fields
+[schema/frontmatter.json](schema/frontmatter.json). Required fields
 on every indexable `.md` file:
 
 ```yaml
@@ -209,7 +209,7 @@ index that `pnpm kortex query` uses.
 ## 6. Frontmatter rule and exceptions
 
 Every new `.md` file created in this project must include YAML
-frontmatter per schema/frontmatter.json.
+frontmatter per [schema/frontmatter.json](schema/frontmatter.json).
 
 **Frontmatter is NOT required on these** — they are schema or
 operational files, not indexable content:
@@ -372,7 +372,6 @@ slash command in Claude Code.
 | `safe-change` | Branched change workflow with review-before-commit. |
 | `daily` | Daily-driver wrapper — opens journal, surfaces TODOs. |
 | `read-last-handoff` | Reconstruct session state after a missed bridge. |
-| `sync-to-template` | Mirror `framework` / `both` content to the public template. |
 
 Full documentation per command: see the matching `.md` file in
 `.claude/commands/`.

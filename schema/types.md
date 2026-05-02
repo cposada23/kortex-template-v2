@@ -22,7 +22,7 @@ drifted to ~42 ad-hoc values across the corpus and v2 exists in part
 to undo that.
 
 The canonical list lives in
-frontmatter.json under `properties.type.enum` —
+[frontmatter.json](frontmatter.json) under `properties.type.enum` —
 this document and that JSON enum stay in sync.
 
 ---
@@ -162,7 +162,7 @@ field decides where the idea ends up after triage, regardless of
 which inbox you dropped it in.
 
 **Schema specifics:** see the `if/then` block in
-frontmatter.json.
+[frontmatter.json](frontmatter.json).
 
 **Example:** `projects/example-project/inbox/skool-from-colombia.md`
 
