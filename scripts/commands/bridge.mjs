@@ -161,10 +161,38 @@ async function bridgeIn(root) {
     }
     console.log(`stale_pages: ${status.stale_count ?? 0}`);
     console.log(`open_handoffs: ${status.open_handoffs ?? 0}`);
+    // Surface concrete pending work so it doesn't get lost between sessions.
+    // Three buckets: framework cleanup, per-project status, and NEXT items
+    // from recent sessions that nobody migrated to TODO.md.
+    const fw = status.framework_followups ?? [];
+    if (fw.length > 0) {
+      console.log(`framework_followups:`);
+      for (const f of fw) console.log(`  - ${f.title}`);
+    }
+    const byProj = status.in_progress_by_project ?? {};
+    const projEntries = Object.entries(byProj);
+    if (projEntries.length > 0) {
+      console.log(`in_progress_by_project:`);
+      for (const [slug, descr] of projEntries) {
+        console.log(`  ${slug}: ${descr}`);
+      }
+    }
+    const unmig = status.unmigrated_next_items ?? [];
+    if (unmig.length > 0) {
+      console.log(`unmigrated_next_items:`);
+      for (const u of unmig) console.log(`  - [${u.from_session}] ${u.title}`);
+    }
   }
   console.log('```');
   console.log('');
   console.log('Read AGENTS.md and any open handoff before composing the next move.');
+  // If unmigrated NEXT items exist, surface them above the fold — these
+  // are the silent drops the post-it engordado is meant to catch.
+  if (status?.unmigrated_next_items?.length > 0) {
+    console.log('');
+    console.log(`${tag.warn()} ${status.unmigrated_next_items.length} NEXT item(s) from recent sessions are not tracked in TODO.md.`);
+    console.log('  Consider migrating to TODO.md §Framework or the relevant project TODO.md before they get lost.');
+  }
 }
 
 // =====================================================================

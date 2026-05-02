@@ -26,6 +26,36 @@
       "type": "integer",
       "minimum": 0,
       "description": "Count of session files in output/sessions/ that contain a `## Handoff HH:MM` section without a later `## Bridge-out HH:MM`. Indicates sessions that paused mid-flight and were never closed."
+    },
+    "framework_followups": {
+      "type": "array",
+      "description": "Concrete framework-level follow-ups parsed from TODO.md §Framework. First sentence of each bullet, capped at 200 chars. Surfaced in bridge-in so framework cleanup work doesn't get lost between sessions.",
+      "items": {
+        "type": "object",
+        "required": ["title"],
+        "additionalProperties": false,
+        "properties": {
+          "title": { "type": "string" }
+        }
+      }
+    },
+    "in_progress_by_project": {
+      "type": "object",
+      "description": "Per-project counts and one-line status pulled from TODO.md `## Projects` section. Keys are project slugs; values are the descriptive status string (e.g. '2 in progress (mcp-github Fase 0…)'). Lets bridge-in surface where active work lives without re-reading every project's TODO.md.",
+      "additionalProperties": { "type": "string" }
+    },
+    "unmigrated_next_items": {
+      "type": "array",
+      "description": "Items found in NEXT sections of recent session files that look like concrete tasks (verbs: Bug, Strip, Audit, Renumber, Fix, etc.) but are NOT mentioned in TODO.md. These are session NEXT items that nobody migrated to persistent tracking — surfaced so bridge-in can recover them before they're forgotten. Heuristic; expect false positives.",
+      "items": {
+        "type": "object",
+        "required": ["title", "from_session"],
+        "additionalProperties": false,
+        "properties": {
+          "title": { "type": "string" },
+          "from_session": { "type": "string", "description": "Filename of the session, e.g. '2026-05-01.md'." }
+        }
+      }
     }
   }
 }
