@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// scope: framework
 //
 // Pre-commit hook: block API keys and other secrets from being committed.
 //

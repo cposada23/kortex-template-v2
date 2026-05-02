@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// scope: framework
 //
 // Kortex `daily` — create today's daily journal page.
 //

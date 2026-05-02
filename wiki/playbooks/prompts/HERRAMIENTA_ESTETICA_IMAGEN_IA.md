@@ -16,7 +16,6 @@ related_paths:
     ../../../sources/courses/ai-video-creators/notes/step-01-image-generation/1.4-aesthetic-types/README.md
   - >-
     ../../../sources/courses/ai-video-creators/notes/step-01-image-generation/1.3-visual-taste/README.md
-mirror: both
 ---
 
 # Herramienta: elegir estética para imagen con IA

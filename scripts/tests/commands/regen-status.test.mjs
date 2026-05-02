@@ -1,4 +1,3 @@
-// scope: framework
 // Tests for scripts/commands/regen-status.mjs
 //
 // We test the three computation helpers (parseActivePriorities,

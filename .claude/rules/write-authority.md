@@ -1,5 +1,4 @@
 ---
-scope: framework
 ---
 
 # Write Authority Rule
@@ -88,9 +87,9 @@ different names. Do not break the symlink.
 - **No merge conflicts between surfaces.** If Code and an external
   surface both wrote, every session would need distributed locking or
   constant rebases. One writer eliminates the class of problem.
-- **Hooks + validators only run in Code.** Frontmatter validation, link
-  validation, scope tagging — all enforced at commit time by
-  `scripts/hooks/`. Writes outside Code bypass those checks entirely.
+- **Hooks + validators only run in Code.** Frontmatter validation and
+  link validation are enforced at commit time by `scripts/hooks/`.
+  Writes outside Code bypass those checks entirely.
 - **Commit discipline + history quality.** `safe-change`, `bridge`,
   `daily` shape commit messages and log entries consistently. An
   external chat writing commits directly would drift in tone, scope,
@@ -117,8 +116,6 @@ This rule is partly social and partly automated:
   rejects malformed frontmatter at commit time.
 - Link validator (`scripts/hooks/validate-links.mjs`) rejects broken
   internal links.
-- Scope tag validation (see [scope.md](scope.md)) flags untagged
-  `.claude/` files.
 
 Any write that bypasses Claude Code bypasses these checks too — which
 is exactly what this rule is designed to prevent.
@@ -129,3 +126,4 @@ is exactly what this rule is designed to prevent.
 - [0001-example-adr](../../wiki/decisions/0001-example-adr.md)
 - [example-playbook](../../wiki/playbooks/example-playbook.md)
 <!-- backrefs:end -->
+

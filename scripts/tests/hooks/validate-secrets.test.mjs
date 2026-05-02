@@ -1,4 +1,3 @@
-// scope: framework
 //
 // Unit tests for validate-secrets.
 // Run with: `node --test scripts/tests/hooks/validate-secrets.test.mjs`

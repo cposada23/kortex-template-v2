@@ -5,7 +5,6 @@ layer: project
 language: en
 tags: [project, brief]
 updated: YYYY-MM-DD
-mirror: personal
 distillation_level: 3
 ---
 

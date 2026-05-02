@@ -5,7 +5,6 @@ layer: synthesis
 language: en
 tags: [tag1, tag2]
 updated: YYYY-MM-DD
-mirror: personal
 distillation_level: 2
 related_paths: []
 ---
@@ -39,3 +38,4 @@ Where this came from — course module, conversation, experiment.
 <!-- backrefs:start -->
 - [AGENTS](../../AGENTS.md)
 <!-- backrefs:end -->
+

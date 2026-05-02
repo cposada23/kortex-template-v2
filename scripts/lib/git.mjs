@@ -1,4 +1,3 @@
-// scope: framework
 // Thin wrapper around git plumbing used by every hook.
 // Centralized so the diff-filter / encoding / cwd handling lives in one place
 // and individual hooks don't each rebuild the same subprocess plumbing.

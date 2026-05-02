@@ -15,7 +15,6 @@ related_paths:
   - ../../output/kortex-v2-ultraplan-prompt.md
   - ../../projects/kortex/framework-improvement-plan-v6.md
   - ../../.claude/rules/write-authority.md
-mirror: both
 ---
 
 # Decisión — Kortex v2 greenfield rebuild en repos nuevos

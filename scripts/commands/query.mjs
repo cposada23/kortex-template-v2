@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// scope: framework
 //
 // Kortex `query` — full-text search across the knowledge base.
 //

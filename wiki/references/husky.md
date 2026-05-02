@@ -7,7 +7,6 @@ tags: [husky, git, hooks, infraestructura, framework]
 updated: 2026-05-02
 distillation_level: 3
 confidence: high
-mirror: framework
 ---
 
 # Husky — Gestor de Git Hooks

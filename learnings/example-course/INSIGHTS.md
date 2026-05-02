@@ -5,7 +5,6 @@ layer: source
 language: en
 tags: [example-course, insights, promotion]
 updated: 2026-04-30
-mirror: framework
 distillation_level: 2
 ---
 

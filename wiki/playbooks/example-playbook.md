@@ -5,7 +5,6 @@ layer: synthesis
 language: en
 tags: [inbox, capture, workflow]
 updated: 2026-04-30
-mirror: framework
 distillation_level: 3
 related_paths:
   - ../concepts/example-concept.md

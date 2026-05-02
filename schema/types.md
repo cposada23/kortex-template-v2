@@ -5,7 +5,6 @@ layer: schema
 language: en
 tags: [schema, frontmatter, reference]
 updated: 2026-04-30
-mirror: framework
 ---
 
 # Kortex v2 — Type Reference

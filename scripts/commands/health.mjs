@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// scope: framework
 //
 // Kortex `health` — single-shot wiki health check. Renamed from v1 `lint`.
 //

@@ -1,4 +1,3 @@
-// scope: framework
 //
 // Unit tests for validate-frontmatter.
 // Run with: `node --test scripts/tests/hooks/validate-frontmatter.test.mjs`

@@ -9,7 +9,6 @@ tags:
   - hooks
   - python
 updated: 2026-04-13T00:00:00.000Z
-mirror: both
 ---
 
 # Decision: Keep Python Hooks

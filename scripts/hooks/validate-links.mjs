@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// scope: framework
 //
 // Pre-commit hook: validate internal markdown links resolve to real files.
 //

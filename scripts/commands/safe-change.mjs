@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// scope: framework
 //
 // Kortex `safe-change` — branched change workflow.
 //

@@ -16,7 +16,6 @@ related_paths:
 confidence: high
 source_count: 4
 last_verified: 2026-04-26T00:00:00.000Z
-mirror: both
 ---
 
 # Ultraplan — Cloud-based Planning para fases complejas
@@ -1226,7 +1225,6 @@ Crear `~/.claude/skills/ultraplan-<proyecto>.md` (global) o
 
 ```markdown
 ---
-scope: project:<nombre-proyecto>     # o: framework si es global
 ---
 
 # Ultraplan — <Tu Proyecto>

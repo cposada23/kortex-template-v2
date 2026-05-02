@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// scope: framework
 //
 // Kortex `bridge` — session start/end/recovery/handoff in one command.
 //

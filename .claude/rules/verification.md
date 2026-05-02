@@ -1,5 +1,4 @@
 ---
-scope: framework
 ---
 
 # Factual Verification Rules
@@ -84,3 +83,4 @@ claims (production, purchases, irreversible decisions).
 - [AGENTS](../../AGENTS.md)
 - [cross-ai-validation](../../wiki/playbooks/cross-ai-validation.md)
 <!-- backrefs:end -->
+

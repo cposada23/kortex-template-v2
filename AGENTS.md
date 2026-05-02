@@ -5,7 +5,6 @@ layer: project
 language: en-es
 tags: [agents, kortex, framework]
 updated: 2026-04-30
-mirror: framework
 ---
 
 # Kortex — Agent Context
@@ -100,18 +99,6 @@ Each `type` value is documented with a use case and example path in
 [schema/types.md](schema/types.md). Don't invent new types. If you
 need a type that isn't there, write an ADR proposing it.
 
-### The `mirror:` field
-
-`mirror:` controls whether a page propagates to the public template
-when you run `pnpm kortex sync-to-template`:
-
-- `mirror: framework` — copies into the public template repo
-- `mirror: personal` — stays in your private repo (default if
-  omitted)
-- `mirror: both` — copies to the template AND keeps in your repo
-
-Default is `personal` because shipping a page publicly is the
-exception. Most of what you write is private knowledge.
 
 ### Idea-specific schema
 
@@ -222,10 +209,6 @@ operational files, not indexable content:
 The pre-commit hook at `scripts/hooks/validate-frontmatter.mjs`
 enforces this list — keep the two in sync when you update either.
 
-Files under `.claude/commands/`, `.claude/skills/`, and
-`.claude/rules/` carry minimal frontmatter with a single `scope:`
-field (`framework | project:<name> | personal`) — not the full
-content schema. See [scope.md](.claude/rules/scope.md).
 
 ---
 
@@ -300,18 +283,6 @@ Full rule: [.claude/rules/verification.md](.claude/rules/verification.md).
 
 ---
 
-## 11. Scope rule
-
-Every file under `.claude/` declares a scope:
-
-- `scope: framework` — portable; mirrors to the public template
-- `scope: project:<name>` — bound to one project; never mirrors
-- `scope: personal` — your private overrides; never mirrors
-
-Without an explicit declaration, default is `personal` (default-deny
-on the mirror). Full rule: [.claude/rules/scope.md](.claude/rules/scope.md).
-
----
 
 ## 12. Write authority rule
 
@@ -335,26 +306,6 @@ and other tools (which read `AGENTS.md`) point at the same file.
 
 ---
 
-## 13. The `mirror:` field — public/private split
-
-This repo can mirror selected files to a public template. The
-`mirror:` field on each content `.md` file and the `scope:` field on
-each `.claude/` artifact together decide what goes:
-
-| Source signal | Behavior of `pnpm kortex sync-to-template` |
-|---|---|
-| `mirror: framework` (content) | copies to template |
-| `mirror: personal` (default) | stays private |
-| `mirror: both` | copies AND stays |
-| `scope: framework` (`.claude/`) | copies to template |
-| `scope: project:<name>` | stays private |
-| `scope: personal` | stays private |
-
-If you fork the public template and ship your own conventions,
-bump pages from `personal` to `both` so they propagate downstream
-on the next sync.
-
----
 
 ## 14. Commands
 
@@ -437,7 +388,6 @@ new entry that supersedes it.
 ## Backlinks
 <!-- backrefs:start -->
 - [links](.claude/rules/links.md)
-- [scope](.claude/rules/scope.md)
 - [verification](.claude/rules/verification.md)
 - [write-authority](.claude/rules/write-authority.md)
 - [area](.claude/templates/area.md)

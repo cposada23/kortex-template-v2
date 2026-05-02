@@ -1,4 +1,3 @@
-// scope: framework
 // Tests for scripts/commands/bridge.mjs
 //
 // We test the pure helpers (hasOpenHandoff, classifyGitState,

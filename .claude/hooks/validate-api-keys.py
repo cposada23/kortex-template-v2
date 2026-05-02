@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# scope: framework
 """
 Pre-commit hook: block API keys from being committed.
 

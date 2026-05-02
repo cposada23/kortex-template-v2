@@ -1,5 +1,4 @@
 ---
-scope: framework
 ---
 
 # /read-last-handoff

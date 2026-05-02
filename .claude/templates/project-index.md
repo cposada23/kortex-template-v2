@@ -24,7 +24,6 @@ layer: project
 language: en-es
 tags: [project, index]
 updated: YYYY-MM-DD
-mirror: personal
 ---
 
 # {{Project Name}} — Project Index
@@ -99,3 +98,4 @@ Zone entry: [../INDEX.md](../INDEX.md). Root entry:
 <!-- backrefs:start -->
 - [AGENTS](../../AGENTS.md)
 <!-- backrefs:end -->
+

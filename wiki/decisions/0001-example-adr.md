@@ -5,7 +5,6 @@ layer: synthesis
 language: en
 tags: [adr, schema, agents]
 updated: 2026-04-30
-mirror: framework
 status: active
 distillation_level: 3
 ---
@@ -126,5 +125,7 @@ the wiki.
 
 ## Backlinks
 <!-- backrefs:start -->
+- [write-authority](../../.claude/rules/write-authority.md)
 - [AGENTS](../../AGENTS.md)
 <!-- backrefs:end -->
+

@@ -17,7 +17,6 @@ related_paths:
 confidence: medium
 source_count: 5
 last_verified: 2026-04-26T00:00:00.000Z
-mirror: both
 ---
 
 # Browser Automation con Playwright + Claude Code
