@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// scope: framework
 //
 // Pre-commit hook: validate YAML frontmatter on staged .md files.
 //

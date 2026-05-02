@@ -1,4 +1,3 @@
-// scope: framework
 //
 // Tests for scripts/commands/query.mjs (post-Phase-D fix).
 //

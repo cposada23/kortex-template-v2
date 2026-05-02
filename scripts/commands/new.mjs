@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// scope: framework
 //
 // Kortex `new` — interactive scaffolder for a new content page.
 //

@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// scope: framework
 //
 // Kortex `regen-status` — recompute and write `.cache/status.json`.
 //

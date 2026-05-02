@@ -1,4 +1,3 @@
-// scope: framework
 //
 // Unit tests for update-backrefs's rewriteBacklinks.
 // Run with: `node --test scripts/tests/hooks/update-backrefs.test.mjs`

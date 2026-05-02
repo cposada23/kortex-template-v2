@@ -11,7 +11,6 @@ updated: 2026-04-13T00:00:00.000Z
 distillation_level: 2
 confidence: high
 source_count: 1
-mirror: both
 ---
 
 # Decision: Consolidate wiki subfolder CLAUDE.md files

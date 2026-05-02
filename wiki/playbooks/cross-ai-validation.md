@@ -19,7 +19,6 @@ related_paths:
   - ../decisions/
   - ../../output/audits/milo-ia-ig-profile-validation-2026-04-18.md
   - ../../projects/example-project/inbox/processed/ig-validation-2026-04-18.md
-mirror: both
 ---
 
 # Cross-AI Validation Playbook

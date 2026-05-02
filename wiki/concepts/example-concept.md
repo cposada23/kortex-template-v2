@@ -5,7 +5,6 @@ layer: synthesis
 language: en
 tags: [knowledge-management, note-taking]
 updated: 2026-04-30
-mirror: framework
 distillation_level: 3
 related_paths:
   - ../playbooks/example-playbook.md
@@ -63,3 +62,8 @@ For the procedure of writing one, see
 
 This concept is from the Zettelkasten tradition (Niklas Luhmann),
 adapted for markdown-and-git by the Kortex framework.
+
+## Backlinks
+<!-- backrefs:start -->
+- [example-playbook](../playbooks/example-playbook.md)
+<!-- backrefs:end -->

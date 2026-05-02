@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// scope: framework
 //
 // Pre-commit hook: enforce the AGENTS.md / CLAUDE.md mirror invariant.
 //

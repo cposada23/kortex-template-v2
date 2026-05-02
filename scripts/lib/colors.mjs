@@ -1,4 +1,3 @@
-// scope: framework
 // ANSI color helpers — no external deps (chalk avoided to keep deps minimal).
 // Auto-disables when stdout is not a TTY or NO_COLOR is set, so logs piped
 // into files or CI don't get cluttered with escape codes.

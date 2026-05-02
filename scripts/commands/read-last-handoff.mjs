@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// scope: framework
 //
 // Kortex `read-last-handoff` — print (or copy) the last handoff section.
 //

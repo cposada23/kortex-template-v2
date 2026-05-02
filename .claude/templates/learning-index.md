@@ -29,7 +29,6 @@ layer: source
 language: en-es
 tags: [learning, index]
 updated: YYYY-MM-DD
-mirror: personal
 ---
 
 # {{Learning Name}} — Learning Index
@@ -102,3 +101,4 @@ Zone entry: [../INDEX.md](../INDEX.md). Root entry:
 <!-- backrefs:start -->
 - [AGENTS](../../AGENTS.md)
 <!-- backrefs:end -->
+

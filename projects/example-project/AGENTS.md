@@ -5,7 +5,6 @@ layer: project
 language: en
 tags: [example-project, agents]
 updated: 2026-04-30
-mirror: framework
 ---
 
 # Example Project — Agent Context

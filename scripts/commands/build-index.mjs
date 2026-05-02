@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// scope: framework
 //
 // Kortex `build-index` — rebuild every INDEX.md from the filesystem.
 //

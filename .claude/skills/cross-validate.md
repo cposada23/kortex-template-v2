@@ -1,5 +1,4 @@
 ---
-scope: framework
 ---
 
 # /cross-validate — Multi-LLM Cross-Validation (wrapper)

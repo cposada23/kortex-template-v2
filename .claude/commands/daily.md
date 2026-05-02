@@ -1,5 +1,4 @@
 ---
-scope: framework
 ---
 
 # /daily
@@ -35,7 +34,6 @@ layer: source
 language: es
 tags: [journal, daily]
 updated: YYYY-MM-DD
-mirror: personal
 ---
 
 # Journal YYYY-MM-DD

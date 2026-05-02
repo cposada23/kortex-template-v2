@@ -13,7 +13,6 @@ related_paths:
   - ../../concepts/strategy/FICHA_NICHO.md
   - ../../concepts/strategy/MARKETING_FUNDAMENTOS.md
   - PROMPT_GUIA.md
-mirror: both
 ---
 
 # Herramienta: prompts para definir e iterar nichos (IA)

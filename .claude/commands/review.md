@@ -1,5 +1,4 @@
 ---
-scope: framework
 ---
 
 # /review

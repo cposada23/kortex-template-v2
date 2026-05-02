@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// scope: framework
 //
 // Soft pre-commit hook: regenerate `## Backlinks` sections on staged .md files.
 //

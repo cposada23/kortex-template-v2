@@ -17,7 +17,6 @@ related_paths:
 confidence: medium
 source_count: 4
 last_verified: 2026-04-26T00:00:00.000Z
-mirror: both
 ---
 
 # Evaluación y adopción de Superpowers (plugin Claude Code)
@@ -654,7 +653,6 @@ Ejemplo de estructura:
 
 ```markdown
 ---
-scope: project:<nombre-proyecto>
 ---
 
 # Override de Superpowers para <nombre-proyecto>

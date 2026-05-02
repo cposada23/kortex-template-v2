@@ -13,7 +13,6 @@ distillation_level: 2
 confidence: high
 source_count: 1
 last_verified: 2026-04-16T00:00:00.000Z
-mirror: both
 ---
 
 # Decision: Artifact Pattern for Deployable Products

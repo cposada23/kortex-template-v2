@@ -5,7 +5,6 @@ layer: project
 language: en
 tags: [example-project, todo]
 updated: 2026-04-30
-mirror: framework
 status: active
 ---
 

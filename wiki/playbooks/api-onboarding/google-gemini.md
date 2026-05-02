@@ -16,7 +16,6 @@ last_verified: 2026-04-23T00:00:00.000Z
 related_paths:
   - README.md
   - ../../../.claude/hooks/validate-api-keys.py
-mirror: both
 ---
 
 # API Onboarding — Google Gemini

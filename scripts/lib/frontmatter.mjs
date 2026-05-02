@@ -1,4 +1,3 @@
-// scope: framework
 // Frontmatter parsing wrapper around `gray-matter`.
 //
 // Why a wrapper:

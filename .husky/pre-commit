@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-# scope: framework
 #
 # pre-commit pipeline — runs in the order below; first hard failure aborts.
 #

@@ -1,5 +1,4 @@
 ---
-scope: framework
 ---
 
 # /safe-change
@@ -55,3 +54,8 @@ pnpm kortex safe-change discard           # NO — discard branch
 - `/bridge-out` commits + pushes session work, but does not branch.
 - `/safe-change` is the branched-change ritual for changes that need
   review.
+
+## Backlinks
+<!-- backrefs:start -->
+- [cross-ai-validation](../../wiki/playbooks/cross-ai-validation.md)
+<!-- backrefs:end -->

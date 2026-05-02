@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-# scope: framework
 #
 # pre-push pipeline — currently a no-op placeholder.
 #

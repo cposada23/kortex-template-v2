@@ -5,7 +5,6 @@ layer: synthesis
 language: es
 tags: [cross-validate, prompt-template, perplexity]
 updated: 2026-04-30
-mirror: framework
 ---
 
 # Validator: Perplexity Sonar Pro — Competitive Intelligence
@@ -116,4 +115,6 @@ que el owner debería responder antes de shippear.
 ## Backlinks
 <!-- backrefs:start -->
 - [cross-validate](../../../../.claude/skills/cross-validate.md)
+- [cross-ai-validation](../../cross-ai-validation.md)
 <!-- backrefs:end -->
+

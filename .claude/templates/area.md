@@ -5,7 +5,6 @@ layer: synthesis
 language: en
 tags: [area]
 updated: YYYY-MM-DD
-mirror: personal
 distillation_level: 3
 related_paths: []
 ---

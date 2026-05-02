@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-# scope: framework
 #
 # post-commit pipeline — runs AFTER a successful commit. Failures here do
 # NOT roll back the commit (git doesn't allow that anyway), so we use this

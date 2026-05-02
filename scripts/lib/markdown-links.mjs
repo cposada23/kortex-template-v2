@@ -1,4 +1,3 @@
-// scope: framework
 // Lightweight markdown link parser + relative-link resolver.
 // Used by validate-links and update-backrefs.
 //
