@@ -5,7 +5,6 @@ layer: project
 language: en
 tags: [cross-validate, cost-log, ephemeral]
 updated: 2026-04-30
-mirror: personal
 ---
 
 # Cross-validate — cost log
@@ -60,3 +59,4 @@ configuration. Editing this file rewrites history.
 - [cross-validate](../../.claude/skills/cross-validate.md)
 - [cross-ai-validation](../../wiki/playbooks/cross-ai-validation.md)
 <!-- backrefs:end -->
+
