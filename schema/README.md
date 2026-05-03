@@ -52,15 +52,6 @@ get re-validated against the new shape. Bump procedure:
 4. **Open an ADR** in `wiki/decisions/` documenting the change —
    what was added/removed/tightened, what the migration looks like
    for existing files, and why now.
-5. **Mirror to the public template.** From the user's repo
-   (`mykortex`):
-
-   ```bash
-   pnpm kortex sync-to-template
-   ```
-
-   This propagates the schema change upstream so new clones get the
-   new shape.
 
 For non-breaking additions (new optional field with a sensible
 default), step 4 (the ADR) is recommended but not required. For
@@ -121,3 +112,9 @@ What did NOT change:
   prose; this folder defines it.
 
 If you need to add a field, this folder is where the change starts.
+
+## Backlinks
+<!-- backrefs:start -->
+- [types](types.md)
+<!-- backrefs:end -->
+
