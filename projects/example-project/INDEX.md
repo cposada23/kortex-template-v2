@@ -5,7 +5,6 @@ layer: project
 language: en
 tags: [example-project, index]
 updated: 2026-04-30
-mirror: framework
 ---
 
 # Example Project — Project Index
@@ -63,4 +62,7 @@ Zone entry: [../INDEX.md](../INDEX.md).
 ## Backlinks
 <!-- backrefs:start -->
 - [AGENTS](AGENTS.md)
+- [README](README.md)
+- [TODO](TODO.md)
 <!-- backrefs:end -->
+

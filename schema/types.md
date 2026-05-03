@@ -211,7 +211,7 @@ across multiple pages and want one canonical entry.
 ### `index`
 
 Auto-generated `INDEX.md` listing children of a folder. Created and
-maintained by `pnpm kortex regen-indexes`, not by hand.
+maintained by `pnpm kortex build-index`, not by hand.
 
 **When to use:** never manually — let the regenerator write these.
 The type exists so the validator recognizes them as legitimate

@@ -5,7 +5,6 @@ layer: source
 language: en
 tags: [example-course, index, learning]
 updated: 2026-04-30
-mirror: framework
 ---
 
 # Example Course — Learning Index
@@ -65,3 +64,8 @@ Manual edits when a top-level file is added or removed.
 `pnpm kortex health` flags drift.
 
 Zone entry: [../INDEX.md](../INDEX.md).
+
+## Backlinks
+<!-- backrefs:start -->
+- [INSIGHTS](INSIGHTS.md)
+<!-- backrefs:end -->
