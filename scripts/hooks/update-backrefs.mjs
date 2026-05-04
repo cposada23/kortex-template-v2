@@ -256,9 +256,33 @@ function gitAddSilent(filePath) {
   }
 }
 
+// Opt-in debug logger. Activated by `KORTEX_BACKREFS_DEBUG=1`; otherwise
+// a no-op with zero overhead. Captures timestamp, PID/PPID (to detect
+// duplicate invocations), staged set, edges count, and per-file decisions.
+// Used to investigate the post-commit AGENTS.md side-effect bug observed
+// 2026-05-02; left in place so future occurrences can be captured without
+// re-instrumenting. Output: `.cache/update-backrefs-debug.log`.
+function debugLog(root, payload) {
+  if (process.env.KORTEX_BACKREFS_DEBUG !== '1') return;
+  try {
+    const dir = path.join(root, '.cache');
+    fs.mkdirSync(dir, { recursive: true });
+    const line = JSON.stringify({
+      ts: new Date().toISOString(),
+      pid: process.pid,
+      ppid: process.ppid,
+      ...payload,
+    }) + '\n';
+    fs.appendFileSync(path.join(dir, 'update-backrefs-debug.log'), line);
+  } catch {
+    // Never let logging break the hook.
+  }
+}
+
 async function main() {
   const root = repoRoot();
   const staged = stagedFiles('.md');
+  debugLog(root, { phase: 'start', staged });
   if (staged.length === 0) process.exit(0);
 
   // Build the full edge map fresh. Cheap on a small repo (~100ms for a few
@@ -280,6 +304,8 @@ async function main() {
     console.warn(colors.yellow('update-backrefs: cache write failed (' + e.message + ')'));
   }
 
+  debugLog(root, { phase: 'edges-built', edge_keys: Object.keys(edges).length });
+
   let rewriteCount = 0;
   for (const rel of staged) {
     const abs = path.join(root, rel);
@@ -289,9 +315,18 @@ async function main() {
     } catch {
       continue;
     }
-    const refs = edges[rel.split(path.sep).join('/')] || [];
-    const newContent = rewriteBacklinks(content, refs, rel.split(path.sep).join('/'));
-    if (newContent !== content) {
+    const relKey = rel.split(path.sep).join('/');
+    const refs = edges[relKey] || [];
+    const newContent = rewriteBacklinks(content, refs, relKey);
+    const willRewrite = newContent !== content;
+    debugLog(root, {
+      phase: 'process',
+      rel: relKey,
+      refs_count: refs.length,
+      will_rewrite: willRewrite,
+      writes_no_incoming: newContent.includes('_No incoming links._'),
+    });
+    if (willRewrite) {
       try {
         fs.writeFileSync(abs, newContent);
         gitAddSilent(rel);
@@ -303,6 +338,7 @@ async function main() {
       }
     }
   }
+  debugLog(root, { phase: 'done', rewrite_count: rewriteCount });
 
   if (rewriteCount > 0) {
     console.log(
