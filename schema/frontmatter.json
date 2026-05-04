@@ -4,7 +4,14 @@
   "title": "Kortex v2 frontmatter",
   "description": "Canonical schema for Kortex v2 markdown file frontmatter. Consolidates v1 frontmatter.md + idea-frontmatter.md + the schema content embedded in v1 root CLAUDE.md into a single source of truth. v1 .md rules files are obsolete after v2 — this JSON Schema is the authority.",
   "type": "object",
-  "required": ["title", "type", "layer", "language", "tags", "updated"],
+  "required": [
+    "title",
+    "type",
+    "layer",
+    "language",
+    "tags",
+    "updated"
+  ],
   "additionalProperties": true,
   "properties": {
     "title": {
@@ -34,12 +41,21 @@
     },
     "layer": {
       "type": "string",
-      "enum": ["source", "synthesis", "project", "schema"],
+      "enum": [
+        "source",
+        "synthesis",
+        "project",
+        "schema"
+      ],
       "description": "Conceptual layer in the five-zone architecture. v1 mixed `capa/N-...` tags with `layer:` field — v2 keeps only `layer:` and removes the `capa/*` tag convention entirely. `source` = raw imported material, `synthesis` = wiki layer, `project` = active execution, `schema` = framework/operational."
     },
     "language": {
       "type": "string",
-      "enum": ["en", "es", "en-es"],
+      "enum": [
+        "en",
+        "es",
+        "en-es"
+      ],
       "description": "Content language. `en-es` indicates intentional bilingual content."
     },
     "tags": {
@@ -55,12 +71,6 @@
       "type": "string",
       "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
       "description": "ISO-8601 date (YYYY-MM-DD) of last meaningful edit. Bump on substantive changes; whitespace edits do not require a bump."
-    },
-    "mirror": {
-      "type": "string",
-      "enum": ["framework", "personal", "both"],
-      "default": "personal",
-      "description": "Mirror flag — controls publication to the public template repo via `pnpm kortex sync-to-template`. `framework` = mirrored to the public template (portable, no personal data). `personal` (default) = stays in the user's repo only. `both` = mirrored AND kept locally (rare; reserved for content that has both a public canonical version and a personal customization layer). Replaces the draft `visibility:` field that briefly existed during v2 design."
     },
     "status": {
       "type": "string",
@@ -89,7 +99,11 @@
     },
     "confidence": {
       "type": "string",
-      "enum": ["high", "medium", "low"],
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
       "description": "Trust level of the claims on the page. Orthogonal to `distillation_level` — distillation tracks maturity, confidence tracks reliability. A level-3 page can be confidence-low if its sources are weak."
     },
     "source_count": {
@@ -112,7 +126,9 @@
     },
     "related_paths": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "description": "Cross-references as relative paths from the source file's directory. Replaces v1's deprecated `related:` (Obsidian wikilinks) field."
     },
     "course": {
@@ -131,8 +147,14 @@
   "allOf": [
     {
       "if": {
-        "properties": { "type": { "const": "idea" } },
-        "required": ["type"]
+        "properties": {
+          "type": {
+            "const": "idea"
+          }
+        },
+        "required": [
+          "type"
+        ]
       },
       "then": {
         "required": [

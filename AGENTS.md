@@ -20,7 +20,7 @@ agent) want to change a rule, edit `AGENTS.md`.
 
 ---
 
-## 1. What Kortex is
+## What Kortex is
 
 Kortex is a **personal knowledge graph** built from plain markdown
 files, designed to be edited by humans and AI agents in the same
@@ -43,7 +43,7 @@ relies on manual gardening alone.
 
 ---
 
-## 2. The five-zone architecture
+## The five-zone architecture
 
 ```
 inbox/      CAPTURE ZONE    Raw input. Zero friction. AI can write here.
@@ -77,7 +77,7 @@ it lives in the project root and `.claude/`.
 
 ---
 
-## 3. Schema
+## Schema
 
 The single source of truth for the frontmatter schema is
 [schema/frontmatter.json](schema/frontmatter.json). Required fields
@@ -104,7 +104,7 @@ need a type that isn't there, write an ADR proposing it.
 
 Pages with `type: idea` carry three extra required fields —
 `status`, `angle`, `target_channel` — gated by a JSON Schema
-discriminator. See §8 below.
+discriminator. See the "Idea schema rule" section below.
 
 ### Confidence + distillation (optional)
 
@@ -122,7 +122,7 @@ based on a single unverified source.
 
 ---
 
-## 4. Language policy
+## Language policy
 
 Kortex is bilingual by design.
 
@@ -145,7 +145,7 @@ The `language:` frontmatter field uses 3 values: `en`, `es`, `en-es`.
 
 ---
 
-## 5. Auto-index rule
+## Auto-index rule
 
 **Every `.md` file appears in exactly one INDEX.md — the most specific
 one for its location.** Files at any depth are listed in their parent
@@ -193,7 +193,7 @@ index that `pnpm kortex query` uses.
 
 ---
 
-## 6. Frontmatter rule and exceptions
+## Frontmatter rule and exceptions
 
 Every new `.md` file created in this project must include YAML
 frontmatter per [schema/frontmatter.json](schema/frontmatter.json).
@@ -212,7 +212,7 @@ enforces this list — keep the two in sync when you update either.
 
 ---
 
-## 7. Confidence + distillation tracking
+## Confidence + distillation tracking
 
 Two optional fields, orthogonal to each other:
 
@@ -229,7 +229,7 @@ don't block new pages on them.
 
 ---
 
-## 8. Idea schema rule
+## Idea schema rule
 
 Items in any `/inbox/` folder with `type: idea` follow a narrower
 schema with three additional required fields:
@@ -259,7 +259,7 @@ the right destination.
 
 ---
 
-## 9. Link rule
+## Link rule
 
 All internal links use **standard relative markdown**:
 `text`. No wikilinks. The pre-commit hook at
@@ -271,7 +271,7 @@ rule: [.claude/rules/links.md](.claude/rules/links.md).
 
 ---
 
-## 10. Verification rule
+## Verification rule
 
 Claims about fast-changing external facts (AI product features,
 platform UIs, metrics, legal events) require a live web search with
@@ -284,7 +284,7 @@ Full rule: [.claude/rules/verification.md](.claude/rules/verification.md).
 ---
 
 
-## 12. Write authority rule
+## Write authority rule
 
 Structural writes pass through Claude Code only. External AI surfaces
 may read and propose captures to `inbox/`; they do not write to
@@ -307,7 +307,7 @@ and other tools (which read `AGENTS.md`) point at the same file.
 ---
 
 
-## 14. Commands
+## Commands
 
 The available command set lives under `.claude/commands/`. Each is a
 thin slash-command wrapper around an implementation in
@@ -329,7 +329,7 @@ Full documentation per command: see the matching `.md` file in
 
 ---
 
-## 15. Asset sidecars
+## Asset sidecars
 
 Binary files (images, videos, PDFs) get a `[filename].meta.md`
 sidecar describing the asset:
@@ -345,7 +345,7 @@ sidecar nor by a folder-README as "sidecar debt".
 
 ---
 
-## 16. Logs and rotation
+## Logs and rotation
 
 `output/JOURNAL.md` is append-only — every session adds a STATE /
 DECISIONS / NEXT block at the bottom. `pnpm kortex health` rotates
@@ -357,7 +357,7 @@ new entry that supersedes it.
 
 ---
 
-## 17. Git policy
+## Git policy
 
 - **Commit before any bulk operation.** A commit before a refactor or
   a multi-file rename is the cheapest insurance you can buy.
@@ -382,7 +382,7 @@ new entry that supersedes it.
 | A new project's INDEX.md | [.claude/templates/project-index.md](.claude/templates/project-index.md) |
 | A new learning's INDEX.md | [.claude/templates/learning-index.md](.claude/templates/learning-index.md) |
 | A session-end note | [.claude/templates/session-end.md](.claude/templates/session-end.md) |
-| An idea (in inbox) | §8 above + matching example in `inbox/INBOX.md` |
+| An idea (in inbox) | "Idea schema rule" section above + matching example in `inbox/INBOX.md` |
 | An ADR | [wiki/decisions/0001-example-adr.md](wiki/decisions/0001-example-adr.md) (read as model) |
 
 ## Backlinks
